@@ -11,9 +11,6 @@ def eingabe_lesen(dateiname):
                 verbindungen.append(verbindung)
     return mitglieder, verbindungen
 
-def ist_superstar(mitglied, mitglieder, verbindungen):
-    pass
-
 
 verbindungen_cache = {}
 euro = 0
