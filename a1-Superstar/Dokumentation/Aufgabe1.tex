@@ -1,0 +1,154 @@
+\documentclass[a4paper,10pt,ngerman]{scrartcl}
+\usepackage{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+
+% Die nächsten drei Felder bitte anpassen:
+\newcommand{\Name}{Richard Wohlbold} % Teamname oder eigenen Namen angeben
+\newcommand{\TeamId}{00012}                       % Team-ID aus dem PMS
+\newcommand{\Aufgabe}{Aufgabe 1: Superstar} % Aufgabennummer und -name
+
+% Kopf- und Fußzeilen
+\usepackage{scrlayer-scrpage}
+\setkomafont{pageheadfoot}{\textrm}
+\ifoot{\Name}
+\cfoot{\thepage}
+\chead{\Aufgabe}
+\ofoot{Team-ID: \TeamId}
+
+% Für mathematische Befehle und Symbole
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Für Bilder
+\usepackage{graphicx}
+
+% Für Algorithmen
+\usepackage{algpseudocode}
+
+% Für Quelltext
+\usepackage{listings}
+\usepackage{color}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\lstset{
+  keywordstyle=\color{blue},commentstyle=\color{mygreen},
+  stringstyle=\color{mymauve},rulecolor=\color{black},
+  basicstyle=\footnotesize\ttfamily,numberstyle=\tiny\color{mygray},
+  captionpos=b, % sets the caption-position to bottom
+  keepspaces=true, % keeps spaces in text
+  numbers=left, numbersep=5pt, showspaces=false,showstringspaces=true,
+  showtabs=false, stepnumber=2, tabsize=2, title=\lstname
+}
+
+% Diese beiden Pakete müssen als letztes geladen werden
+%\usepackage{hyperref} % Anklickbare Links im Dokument
+\usepackage{cleveref}
+
+% Daten für die Titelseite
+\title{\Aufgabe}
+\author{\Name\\Team-ID: \TeamId}
+\date{\today}
+
+
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\clearpage
+
+\section{Lösungsidee}
+Mein Verfahren, um zu ermitteln, ob es einen Superstar gibt und wie dieser heißt ist in zwei
+Phasen unterteilt:
+\begin{enumerate}
+\item In der \textbf{Ermittlungsphase} wird aus der gesamten Gruppe genau eine Person durch ein Ausschlussverfahren
+ermittelt, die ein Superstar sein könnte. 
+\item In der \textbf{Validierungsphase} wird überprüft, ob die in der Ermittlungsphase 
+ermittelte Person tatsächlich ein Superstar ist.
+\end{enumerate}
+
+\paragraph{Ermittlungsphase}
+Zur Ermittlung, ob es einen Superstar gibt und wie dieser eventuell heißt, benutze ich
+ein Ausschlussverfahren. Am Anfang sind alle Mitglieder der Gruppe mögliche Superstars,
+da bisher keine Informationen vorliegen, die beweisen, dass Mitglieder keine Superstars
+sind.
+Um genau einen möglichen Superstar aus wenig Anfragen zu bestimmen, muss man aus jeder Anfrage
+so viele Informationen wie möglich gewinnen.
+Wenn $X$ und $Y$ zwei verschiedene Mitglieder einer Gruppe sind und beide mögliche Superstars
+sind, so schließt eine Anfrage der Form "Folgt $X$ $Y$?" immer entweder $X$ oder $Y$ aus der
+Liste der möglichen Superstars aus, denn:
+\begin{itemize}
+  \item Falls $X$ $Y$ folgt, so kann $X$ kein Superstar sein, denn ein Superstar folgt keinem
+  anderen Mitglied der Gruppe
+  \item Falls $X$ nicht $Y$ folgt, so kann $Y$ kein Superstar sein, denn alle anderen Mitglieder
+  der Gruppe folgen einem Superstar
+\end{itemize}
+Um nun die Anzahl der möglichen Superstars auf einen zu reduzieren, nimmt man die ersten
+zwei Mitglieder $X$ und $Y$ aus der Liste, stellt die Anfrage \textit{Folgt $X$ $Y$?} und fügt
+das nichtausgeschlossene Mitglied wieder der Liste hinzu.\newline
+Da mit diesem Verfahren mit einer Anfrage je ein Mitglied aus der Liste der möglichen Superstars
+eliminiert werden kann und am Anfang $n$ Mitglieder in der Liste sind und am Ende nur $1$ Mitglied
+in der Liste verbleibt, müssen $n-1$ Anfragen gestellt werden, um die Anzahl der möglichen
+Superstars von $n$ auf $1$ zu reduzieren.
+
+\paragraph{Validierungsphase}
+Da jetzt nurnoch ein möglicher Superstar $S$ vorliegt, muss noch überprüft werden, ob dieser tatsächlich
+einer ist. Die einzige Möglichkeit, um dies zu überprüfen, ist für jedes andere Mitglied $X$ zwei Anfragen
+zu stellen:
+\begin{enumerate}
+\item Folgt $X$ $S$? Falls nein, ist $S$ kein Superstar.
+\item Folgt $S$ $X$? Falls ja, ist $S$ kein Superstar.
+\end{enumerate}
+Falls bei einer der Anfragen herauskommt, dass $S$ kein Superstar ist, ist die Validierungsphase
+beendet und es gibt keinen Superstar in der Gruppe, da $S$ der einzige mögliche Superstar
+vor der Validierungsphase war.\newline
+Falls bei keiner der Anfragen herauskommt, dass $S$ kein Superstar ist, haben wir festgestellt,
+dass $S$ niemandem folgt, jedoch $S$ jeder folgt, sodass $S$ ein Superstar ist.\newline
+Falls $S$ ein Superstar ist, werden in der Validierungsphase werden $n-1$ Anfragen der Form 
+\textit{Folgt $S$ $X$?} und $n-1$ Anfragen der Form \textit{Folgt $X$ $S$?} gestellt, sodass maximal $2(n-1)$
+Anfragen gestellt werden.
+
+\paragraph{Optimierung des Verfahrens}
+Da in der Validierungsphase alle möglichen Anfragen, die den möglichen Superstar $S$
+enthalten, gestellt werden müssen, aber schon in der Validierungsphase einige dieser Anfragen
+gestellt werden müssen, um $S$ zu ermitteln, kommt es zwingend vor, dass Anfragen doppelt
+gestellt werden. Da jede doppelt gestellte Anfrage zu vermeiden ist, können bereits gestellte 
+Anfragen und ihre Ergebnisse gespeichert werden und für jede Anfrage kann überprüft werden,
+ob ihr Ergebnis bereits im Zwischenspeicher existiert, sodass die Anzahl der Anfragen leicht gesenkt
+werden kann. Da in der Informatik jedoch oft der Worst-Case zählt, ist meine Schätzung der Anzahl der Anfragen $3(n-1) = 3n-3$.
+
+\clearpage
+
+
+\section{Umsetzung}
+Das Verfahren zur Bestimmung eines Superstars wurde in Python umgesetzt.\newline
+Dazu wird als erstes die Eingabe in die Liste der Mitglieder und die Liste der Verbindungen
+($X$ folgt $Y$) eingelesen. Dabei ist eine Verbindung eine Liste der beiden Namen der Form
+\texttt{[X, Y]}. Dabei kümmert sich die Funktion \texttt{folgt} um das Stellen der Anfrage,
+das Speichern, falls die gleiche Anfrage noch einmal gestellt werden sollte und um das Ausgeben
+der Anfrage und des Ergebnisses. Der Zwischenspeicher ist ein \texttt{dict} das als Schlüssel
+Tupel der Form \texttt{(X,Y)} verwendet, da Python keine Listen als Schlüssel unterstützt,
+und als Wert, ob $X$ $Y$ folgt, zurückgibt. 
+
+\section{Beispiele}
+Genügend Beispiele einbinden! Die Beispiele von der BwInf-Webseite sollten hier diskutiert werden, aber auch eigene Beispiele sind sehr gut – besonders wenn sie Spezialfälle abdecken. Aber bitte nicht 30 Seiten Programmausgabe hier einfügen!
+
+\clearpage
+
+\section{Quellcode (ausschnittsweise)}
+
+Die Funktion \texttt{superstar\_bestimmen}, die den Superstar ermittelt,
+falls es einen gibt:
+\lstinputlisting[language=Python]{superstar_bestimmen.py}
+
+\vspace{30pt}
+
+Die Funktion \texttt{folgt}, die eine Anfrage stellt, sie zwischenspeichert,
+die Anfrage und das Ergebnis ausgibt und die Gesamtkosten verfolgt:
+\lstinputlisting[language=Python]{folgt.py}
+
+
+\end{document}
