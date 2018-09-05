@@ -133,8 +133,77 @@ der Anfrage und des Ergebnisses. Der Zwischenspeicher ist ein \texttt{dict} das 
 Tupel der Form \texttt{(X,Y)} verwendet, da Python keine Listen als Schlüssel unterstützt,
 und als Wert, ob $X$ $Y$ folgt, zurückgibt. 
 
+\clearpage
+
 \section{Beispiele}
-Genügend Beispiele einbinden! Die Beispiele von der BwInf-Webseite sollten hier diskutiert werden, aber auch eigene Beispiele sind sehr gut – besonders wenn sie Spezialfälle abdecken. Aber bitte nicht 30 Seiten Programmausgabe hier einfügen!
+Die erste Zeile ist nicht Teil des Programms, sondern dient zur Illustration, wie das Skript aufgerufen werden sollte.
+Die letzte leere Zeile und das \$ soll zeigen, dass die Ausgabe hier endet.\newline
+
+Beispiel 1 von der bwinf-Webseite:
+\begin{lstlisting}
+$ python superstar.py ../beispieldaten/superstar1.txt
+Folgt Hailey Justin? 	Ja!
+Folgt Justin Selena? 	Nein!
+Folgt Selena Justin? 	Ja!
+Folgt Justin Hailey? 	Nein!
+Superstar: Justin
+3 Mitglieder
+4 gestellte Anfragen
+
+$
+\end{lstlisting}
+
+Beispiel 2 von der bwinf-Webseite:
+\begin{lstlisting}
+$ python superstar.py ../beispieldaten/superstar2.txt
+Folgt Codd Knuth? 	Ja!
+Folgt Knuth Dijkstra? 	Ja!
+Folgt Dijkstra Hoare? 	Nein!
+Folgt Dijkstra Turing? 	Nein!
+Folgt Turing Dijkstra? 	Ja!
+Folgt Hoare Dijkstra? 	Ja!
+Folgt Dijkstra Knuth? 	Nein!
+Folgt Codd Dijkstra? 	Ja!
+Folgt Dijkstra Codd? 	Nein!
+Superstar: Dijkstra
+5 Mitglieder
+9 gestellte Anfragen
+
+$
+\end{lstlisting}
+
+Beispiel 3 von der bwinf-Webseite:
+\begin{lstlisting}
+$ python superstar.py ../beispieldaten/superstar3.txt
+Folgt Sjoukje Rinus? 	Nein!
+Folgt Sjoukje Rineke? 	Nein!
+Folgt Sjoukje Pia? 	Nein!
+Folgt Sjoukje Peter? 	Nein!
+Folgt Sjoukje Jorrit? 	Nein!
+Folgt Sjoukje Jitse? 	Nein!
+Folgt Sjoukje Edsger? 	Ja!
+Folgt Jitse Edsger? 	Ja!
+Folgt Edsger Jitse? 	Ja!
+Kein Superstar
+8 Mitglieder
+9 gestellte Anfragen
+
+$
+\end{lstlisting}
+
+Beispiel 4 von der bwinf-Webseite (Die Liste der Anfragen wurde hier 
+aus Platzgründen auf die erste und lezte Zeile reduziert):
+\begin{lstlisting}
+$ python superstar.py ../beispieldaten/superstar4.txt
+Folgt Rut Penny? 	Nein!
+...
+Folgt Folke Rut? 	Nein!
+Superstar: Folke
+80 Mitglieder
+211 gestellte Anfragen
+
+$
+\end{lstlisting}
 
 \clearpage
 
