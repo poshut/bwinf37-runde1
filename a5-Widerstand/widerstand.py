@@ -1,11 +1,6 @@
+import sys
 from itertools import combinations
-from graphviz import Graph
 from uuid import uuid4
-
-# widerstaende = list(map(float, [
-#     1000, 5600, 180, 6800, 8200, 820, 2700, 150, 100, 1800, 220, 1500, 330, 390, 680, 120, 3900, 3300, 4700, 560, 470, 1200, 270, 2200]))
-
-widerstaende = [100.0, 100.0, 100.0, 100.0]
 
 """
 Ein zusammengebauter Widerstand wird als Tupel repräsentiert.
@@ -29,7 +24,6 @@ def berechne(widerstand):
         return 1 / (1 / berechne(widerstand[1]) + 1 / berechne(widerstand[2]))
     print("error")
     exit(1)
-
 
 
 def widerstand_zusammenbauen(ohm, wie_viele, widerstaende):
@@ -89,11 +83,13 @@ def widerstand_zusammenbauen(ohm, wie_viele, widerstaende):
     return min(moeglichkeiten, key=lambda x: abs(berechne(x)-ohm))
 
 
-# Den Graphen mit der Bibliothek "graphviz" zeichnen
-# Jeder Knoten bekommt eine zufällige ID.
-# Alles wird zwischen einen Anfangs- und Endwiderstand gezeichnet.
-# Die Funktion wird rekursiv aufgerufen.
 def draw(widerstand, graph, knoten_davor, knoten_danach):
+    """
+    Den Graphen mit der Bibliothek "graphviz" zeichnen
+    Jeder Knoten bekommt eine zufällige ID.
+    Alles wird zwischen einen Anfangs- und Endwiderstand gezeichnet.
+    Die Funktion wird rekursiv aufgerufen.
+    """
     if widerstand[0] == "einer":
         uid = str(uuid4())
         graph.node(uid, label="%.2f Ohm" % widerstand[1])
@@ -109,15 +105,39 @@ def draw(widerstand, graph, knoten_davor, knoten_danach):
         draw(widerstand[2], graph, knoten_davor, knoten_danach)
 
 
-for i in range(1, 5):
-    resultat = widerstand_zusammenbauen(25, i, widerstaende)
-    print(resultat)
-    print(berechne(resultat))
-    dot = Graph(name="%s Widerstände - %.2f Ohm" %
-                (i, berechne(resultat)), node_attr={'shape': 'box'}, format='png')
+if __name__ == '__main__':
+    if len(sys.argv) < 3:
+        print("Benutzung:", sys.argv[0],
+              "<Widerstandsliste> <Widerstandswert>")
+        exit(1)
 
-    dot.node('-', label='-')
-    dot.node('+', label='+')
-    print(resultat)
-    draw(resultat, dot, '-', '+')
-    dot.render()
+    widerstandswert = int(sys.argv[2])
+    with open(sys.argv[1]) as f:
+        widerstaende = list(map(lambda x: float(int(x[:-1])), f.readlines()))
+
+    # Versuche, graphviz zu importieren
+    try:
+        graphviz = __import__("graphviz")
+    except ImportError as e:
+        print(e)
+        print("Fehler beim Versuch, Graphviz zu importieren. Es werden keine Zeichnungen ausgegeben.")
+        graphviz = None
+
+    for anzahl in range(1, 5):
+        resultat = widerstand_zusammenbauen(
+            widerstandswert, anzahl, widerstaende)
+        print(anzahl, "Widerstände:", berechne(resultat), "Ohm")
+        print(resultat)
+
+        if graphviz is not None:
+            name = "%s Widerstände - %.2f Ohm" % (anzahl, berechne(resultat))
+            graph = graphviz.Graph(name=name, node_attr={
+                                   'shape': 'box'}, format='png')
+
+            graph.node('-', label='-')
+            graph.node('+', label='+')
+            draw(resultat, graph, '-', '+')
+            graph.render()
+            print("Zeichnung nach \"%s.gv.png\" ausgegeben" % name)
+
+        print()
