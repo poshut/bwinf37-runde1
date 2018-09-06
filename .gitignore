@@ -8,3 +8,6 @@
 *.log
 *.toc
 *.synctex.gz
+
+*.gv*
+
