@@ -1,0 +1,154 @@
+\documentclass[a4paper,10pt,ngerman]{scrartcl}
+\usepackage{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8x]{inputenc}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+
+% Die nächsten drei Felder bitte anpassen:
+\newcommand{\Name}{Richard Wohlbold}
+\newcommand{\TeamId}{00012}
+\newcommand{\Aufgabe}{Aufgabe 5: Widerstand}
+
+% Kopf- und Fußzeilen
+\usepackage{scrlayer-scrpage}
+\setkomafont{pageheadfoot}{\textrm}
+\ifoot{\Name}
+\cfoot{\thepage}
+\chead{\Aufgabe}
+\ofoot{Team-ID: \TeamId}
+
+% Für mathematische Befehle und Symbole
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Für Bilder
+\usepackage{graphicx}
+
+% Für Algorithmen
+\usepackage{algpseudocode}
+
+% Für Quelltext
+\usepackage{listings}
+\usepackage{color}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\lstset{
+  keywordstyle=\color{blue},commentstyle=\color{mygreen},
+  stringstyle=\color{mymauve},rulecolor=\color{black},
+  basicstyle=\footnotesize\ttfamily,numberstyle=\tiny\color{mygray},
+  captionpos=b, % sets the caption-position to bottom
+  keepspaces=true, % keeps spaces in text
+  numbers=left, numbersep=5pt, showspaces=false,showstringspaces=true,
+  showtabs=false, stepnumber=2, tabsize=2, title=\lstname
+}
+
+% Diese beiden Pakete müssen als letztes geladen werden
+%\usepackage{hyperref} % Anklickbare Links im Dokument
+\usepackage{cleveref}
+
+% Daten für die Titelseite
+\title{\Aufgabe}
+\author{\Name\\Team-ID: \TeamId}
+\date{\today}
+
+
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\clearpage
+
+\section{Lösungsidee}
+
+\paragraph{Definitionen}
+\begin{itemize}
+  \item Ein \textbf{Elementarwiderstand} ist ein physischer Widerstand aus Zelda's Grabbelkiste
+  \item Ein \textbf{zusammengesetzter Widerstand} ist ein Widerstand, der aus einem oder mehreren Elementarwiderständen besteht, die beliebig in Reihe oder parallel geschalten sein können
+\end{itemize}
+
+\paragraph{Formeln}
+Zur Bestimmung von $R_2$, falls $R_1$ bekannt und $R_{ges}$ aus $R_1$ und $R_2$ zusammengebaut ist:
+\vspace{10pt}
+
+In Reihenschaltung:
+$$R_2 = R_{ges} - R_1$$ 
+
+In Parallelschaltung:
+$$R_2 = \cfrac{1}{\cfrac{1}{R_{ges}} - \cfrac{1}{R_1}}$$ 
+
+\paragraph{Verfahren}
+Wenn das Problem für alle $n \in \mathbb{N}$ gelöst werden soll, so müssten alle Kombinationen von Widerständen durchprobiert werden. Da aber ein zusammengesetzten Widerstand aus maximal $n = 4$ Elementarwiderstände bestehen kann,
+kann ein rekursives Verfahren mit Fallunterscheidung beschrieben werden:
+
+\begin{enumerate}
+  \item Ein Elementarwiderstand: 
+  
+  Die Lösung ist trivial: Der Elementarwiderstand mit der Ohmzahl, die am nächsten an der geforderten Ohmzahl liegt, wird gewählt.
+  \item Zwei Elementarwiderstände: 
+  
+  Zwei Elementarwiderstände können parallel oder in Reihe geschalten werden. Für alle möglichen Widerstände kann ein anderer optimaler Elementarwiderstand $R_2$, der nach den Formeln oben berechnet wurde, mit dem obigen Verfahren gesucht werden. Beide Möglichkeiten werden einer Menge hinzugefügt. Am Ende wird die Möglichkeit, die am nächsten an der geforderten Ohmzahl $R_{ges}$ liegt, gewählt.
+
+  \item Drei Elementarwiderstände: 
+  
+  Ähnlich wie bei zwei Elementarwiderständen, gibt für jeden Widerstand $R_1$ aus der Grabbelkiste zwei Möglichkeiten: Er kann in Reihe oder parallel zu einem zusammengesetzten Widerstand $R_2$ geschalten werden; dabei werden die Formeln oben zur Bestimmung des Widerstandswertes benutzt. Es gibt keine Anordnung von drei Elementarwiderständen, für die $R_1$ und $R_2$ keine Elementarwiderstände sind, da jeder zusammengesetzter Widerstand aus mindestens zwei Elementarwiderständen bestehen muss, es aber nur drei gibt. Somit lässt sich jede dieser Anordnungen auf eine, bei der $R_1$ ein Elementarwiderstand ist, reduzieren.
+
+  \item Vier Elementarwiderstände: 
+  
+  Hier muss zwischen zwei Fällen unterschieden werden:
+  \begin{enumerate}
+    \item Anordnungen, bei denen $R_1$ ein Elementarwiderstand ist, oder die auf einen solchen reduziert werden können. Für solche Anordnungen kann dasselbe Verfahren wie für drei Elementarwiderstände benutzt werden, nur dass hier $R_2$ aus drei Elementarwiderständen besteht.
+    \item Anordnungen, bei denen $R_1$ kein Elementarwiderstand ist und die nicht auf einen solchen reduziert werden können. Konkret sind dies:
+    \begin{enumerate}
+      \item Zwei Widerstandspaare, die ihre Elementarwiderstände parallel schalten, jedoch untereinander in Reihe geschalten sind
+      \item Zwei Widerstandspaare, die ihre Elementarwiderstände in Reihe schalten, jedoch untereinander parallel geschalten sind
+    \end{enumerate}
+    Um diese Anordnungen zu berücksichtigen, werden alle Kombinationen von zwei Widerständen in der Kiste bestimmt. Der Liste der möglichen Anordnungen werden somit zwei hinzugefügt: Eine, bei der die zwei Widerstände ($R_1$) parallel geschalten sind und bei der $R_1$ mit $R_2$ in Reihe geschalten ist und eine, bei der die zwei Widerstände ($R_1$) in Reihe geschalten sind und bei der $R_1$ mit $R_2$ parallel geschalten sind. Um $R_2$ zu ermitteln, kann das Verfahren für zwei Widerstände oben benutzt werden.
+  \end{enumerate}
+  Beide Verfahren zusammen stellen sicher, dass alle Anordnungen überprüft werden.
+\end{enumerate}
+
+
+\section{Umsetzung}
+Das verfahren zur Bestimmung eines optimalen zusammengesetzten Widerstands wurde in Python umgesetzt. Das Zeichnen eines Bauplans wird mit dem Python-Paket \textit{graphviz} umgesetzt. Neben dem Paket muss auch das gleichnamige Programm installiert werden, um eine Bildausgabe zu ermöglichen. Die verschiedenen Zeichnungen werden als \texttt{.png}-Dateien gespeichert.
+
+Das Skript wird mit zwei Argumenten aufgerufen:
+\begin{itemize}
+  \item Das erste Argument ist der Dateiname der Widerstandsliste.
+  \item Das zweite Argument ist der Widerstandswert, der zusammengebaut werden soll.
+\end{itemize}
+
+Ein zusammengebauter Widerstand wird als Tupel repräsentiert: Das erste Feld ist der Typ des zusammengesetzten Widerstands: \texttt{einer}, \texttt{reihe} oder \texttt{parallel}. Die anderen Felder sind abhängig vom Typ:
+\begin{itemize}
+  \item Falls der Widerstandstyp \texttt{einer} ist, so ist das zweite Feld die Ohmzahl.
+  \item Falls der Widerstandstyp \texttt{reihe} ist, so sind das zweite und dritte Feld die in Reihe geschaltenen Widerstände (elementar oder zusammengesetzt).
+  \item Falls der Widerstandstyp \texttt{parallel} ist, so sind das zweite und dritte Feld die parallel geschaltenen Widerstände (elementar oder zusammengesetzt).
+\end{itemize}
+
+Die Hauptfunktion, um einen zusammengesetzten Widerstand zu bauen, heißt \texttt{widerstand\_zusammenbauen}. Beim Aufruf bekommt sie eine Ohmzahl, die der Widerstand haben sollte (\texttt{ohm}), eine Zahl, wie viele Elementarwiderstände zu verbauen sind (\texttt{wie\_viele}), und eine Liste an Widerständen in der Grabbelkiste (\texttt{widerstaende}). Sie gibt einen zusammengesetzten Widerstand nach obiger Form zurück. Sie ist rekursiv implementiert: 
+\begin{itemize}
+  \item Der Basisfall tritt auf, wenn \texttt{widerstaende} $ = 1$. In diesem Fall wird der Elementarwiderstand mit dem kleinsten Abstand zum geforderten Widerstandswert zurückgegeben.
+  \item Für $n \in \{2,3\}$ erstellt \texttt{wiederstand\_zusammenbauen} eine Liste mit Möglichkeiten, indem jeder Widerstand mit einem zusammengesetzten Widerstand aus (\texttt{wie\_viele} $-1$) parallel und in Reihe geschalten wird. Damit das Programm schneller läuft falls es Widerstände mehrfach in der Kiste gibt, wird jeder Widerstand hier nur einmal probiert.
+  \item Für $n=4$ wird neben dem Verfahren für $n \in \{2,3\}$ zusätzlich ein spezielles Verfahren ausgeführt: Mithilfe von \texttt{itertools.combinations} werden alle unterschiedlichen Paare von Widerständen gefunden. Für jede dieser Kombinationen werden zwei Möglichkeiten nach dem Verfahren, das oben beschrieben wurde, der Liste hinzugefügt.
+\end{itemize}
+Am Ende von \texttt{widerstand\_zusammenbauen} wird die Möglichkeit mit der geringsten Differenz zum geforderten Widerstandswert gewählt.
+
+Die Funktion \texttt{widerstandswert\_berechnen} berechnet den Widerstandswert eines zusammengesetzten Widerstands.
+
+Die Funktion \texttt{widerstand\_zeichnen} zeichnet einen zusammengesetzten Widerstand auf einem Graphen mithilfe der Bibliothek \texttt{graphviz}. \texttt{graphviz} muss jeden Knoten eines Graphs identifizieren können. Dazu benutze ich das integrierte Python-Modul \texttt{uuid} um IDs für die Knoten des Graphs zu generieren. Die Funktion \texttt{widerstand\_zeichnen} zeichnet immer zwischen zwei Knoten (\texttt{knoten\_davor} und \texttt{knoten\_danach}):
+\begin{itemize}
+  \item Bei einem Elementarwiderstand (\texttt{einer}) wird einfach ein neuer Knoten mit dem Widerstandswert erstellt und zwei Kanten zu \texttt{knoten\_davor} und \texttt{knoten\_danach} erstellt.
+  \item Bei einem zusammengesetzten Widerstand, der zwei Widerstände parallel schaltet, wird \texttt{widerstand\_zeichnen} für beide aufgerufen. Hierbei bleiben \texttt{knoten\_davor} und \texttt{knoten\_danach} gleich.
+  \item Bei einem zusammengesetzten Widerstand, der zwei Widerstände in Reihe schaltet, wird ein neuer Knoten ohne Text hinzugefügt, der dann verwendet werden kann, um die beiden Widerstände zu trennen. So wird \texttt{widerstand\_zeichnen} zwischen \texttt{knoten\_davor} und dem neuen Knoten und zwischen \texttt{knoten\_danach} und dem neuen Knoten aufgerufen.
+\end{itemize}
+Um einen Widerstand tatsächlich zu zeichnen, muss erst ein Graph erstellt werden, der mit den ersten beiden Knoten (\texttt{-} und \texttt{+}) befüllt wird. Nachdem alles gezeichnet wurde, wird die Zeichnung als \textit{\texttt{n} Widerstände - \texttt{rges}.gv.png} abgespeichert, wobei \texttt{n} die Anzahl der Widerstände in der Schaltung und \texttt{rges} der entstandene Widerstand ist. Außerdem wird die entsprechende \texttt{graphviz}-Datei abgespeichert.
+
+\section{Beispiele}
+Genügend Beispiele einbinden! Die Beispiele von der BwInf-Webseite sollten hier diskutiert werden, aber auch eigene Beispiele sind sehr gut – besonders wenn sie Spezialfälle abdecken. Aber bitte nicht 30 Seiten Programmausgabe hier einfügen!
+
+\section{Quellcode (ausschnittsweise)}
+Unwichtige Teile des Programms sollen hier nicht abgedruckt werden. Dieser Teil sollte nicht mehr als 2–3 Seiten umfassen, maximal 10.
+
+\end{document}
