@@ -138,11 +138,12 @@ if __name__ == '__main__':
     for anzahl in range(1, 5):
         resultat = widerstand_zusammenbauen(
             widerstandswert, anzahl, widerstaende)
-        print(anzahl, "Widerstände:", widerstandswert_berechnen(resultat), "Ohm")
+        w = "Widerstände" if anzahl > 2 else "Widerstand"
+        print("%d %s: %.2f Ohm" % (anzahl, resultat, widerstandswert_berechnen(resultat)))
         print(resultat)
 
         if graphviz is not None:
-            name = "%s Widerstände - %.2f Ohm" % (anzahl, widerstandswert_berechnen(resultat))
+            name = "%s %s - %.2f Ohm" % (anzahl, w, widerstandswert_berechnen(resultat))
             graph = graphviz.Graph(name=name, node_attr={
                                    'shape': 'box'}, format='png')
 

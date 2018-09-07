@@ -3,6 +3,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8x]{inputenc}
 \usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{float}
 
 % Die nächsten drei Felder bitte anpassen:
 \newcommand{\Name}{Richard Wohlbold}
@@ -43,6 +44,18 @@
   showtabs=false, stepnumber=2, tabsize=2, title=\lstname
 }
 
+
+\lstset{literate=%
+    {Ö}{{\"O}}1
+    {Ä}{{\"A}}1
+    {Ü}{{\"U}}1
+    {ß}{{\ss}}1
+    {ü}{{\"u}}1
+    {ä}{{\"a}}1
+    {ö}{{\"o}}1
+    {~}{{\textasciitilde}}1
+}
+
 % Diese beiden Pakete müssen als letztes geladen werden
 %\usepackage{hyperref} % Anklickbare Links im Dokument
 \usepackage{cleveref}
@@ -63,13 +76,13 @@
 
 \section{Lösungsidee}
 
-\paragraph{Definitionen}
+\subsection{Definitionen}
 \begin{itemize}
   \item Ein \textbf{Elementarwiderstand} ist ein physischer Widerstand aus Zelda's Grabbelkiste
   \item Ein \textbf{zusammengesetzter Widerstand} ist ein Widerstand, der aus einem oder mehreren Elementarwiderständen besteht, die beliebig in Reihe oder parallel geschalten sein können
 \end{itemize}
 
-\paragraph{Formeln}
+\subsection{Formeln}
 Zur Bestimmung von $R_2$, falls $R_1$ bekannt und $R_{ges}$ aus $R_1$ und $R_2$ zusammengebaut ist:
 \vspace{10pt}
 
@@ -79,7 +92,7 @@ $$R_2 = R_{ges} - R_1$$
 In Parallelschaltung:
 $$R_2 = \cfrac{1}{\cfrac{1}{R_{ges}} - \cfrac{1}{R_1}}$$ 
 
-\paragraph{Verfahren}
+\subsection{Verfahren}
 Wenn das Problem für alle $n \in \mathbb{N}$ gelöst werden soll, so müssten alle Kombinationen von Widerständen durchprobiert werden. Da aber ein zusammengesetzten Widerstand aus maximal $n = 4$ Elementarwiderstände bestehen kann,
 kann ein rekursives Verfahren mit Fallunterscheidung beschrieben werden:
 
@@ -146,9 +159,92 @@ Die Funktion \texttt{widerstand\_zeichnen} zeichnet einen zusammengesetzten Wide
 Um einen Widerstand tatsächlich zu zeichnen, muss erst ein Graph erstellt werden, der mit den ersten beiden Knoten (\texttt{-} und \texttt{+}) befüllt wird. Nachdem alles gezeichnet wurde, wird die Zeichnung als \textit{\texttt{n} Widerstände - \texttt{rges}.gv.png} abgespeichert, wobei \texttt{n} die Anzahl der Widerstände in der Schaltung und \texttt{rges} der entstandene Widerstand ist. Außerdem wird die entsprechende \texttt{graphviz}-Datei abgespeichert.
 
 \section{Beispiele}
-Genügend Beispiele einbinden! Die Beispiele von der BwInf-Webseite sollten hier diskutiert werden, aber auch eigene Beispiele sind sehr gut – besonders wenn sie Spezialfälle abdecken. Aber bitte nicht 30 Seiten Programmausgabe hier einfügen!
+
+% \widerstand{Nummer des Beispiels}{Gewünschte Ohm}{Anzahl der Widerstände}{Tatsächliche Ohm}
+\newcommand{\widerstand}[4]{
+  \begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7]{beispiele/beispiel#1-#3}
+    \caption{#2$\Omega$ - #3 \ifnum#3<2 Widerstand \else Widerstände \fi (#4$\Omega$)} 
+  \end{figure}
+}
+
+
+Bemerkung: Die erste und letzte Zeile der Beispiele sind nur zur Anschaulichkeit übernommen worden. Sie sind nicht Teil der Programmausgabe.
+\subsection{500 $\Omega$}
+500 $\Omega$ mit der bwinf-Widerstandsliste:
+
+\begin{lstlisting}
+$ python Implementierung/widerstand.py beispieldaten/widerstaende.txt 500
+
+1 Widerstand: 470 Ohm
+('einer', 470)
+Zeichnung nach "1 Widerstände - 470.00 Ohm.gv.png" ausgegeben
+
+2 Widerstände: 500.3802281368822 Ohm
+('parallel', ('einer', 560), ('einer', 4700))
+Zeichnung nach "2 Widerstände - 500.38 Ohm.gv.png" ausgegeben
+
+3 Widerstände: 500 Ohm
+('reihe', ('einer', 180), ('reihe', ('einer', 220), ('einer', 100)))
+Zeichnung nach "3 Widerstände - 500.00 Ohm.gv.png" ausgegeben
+
+4 Widerstände: 500.0 Ohm
+('parallel', ('reihe', ('einer', 1800), ('einer', 1200)), ('reihe', ('einer', 270), ('einer', 330)))
+Zeichnung nach "4 Widerstände - 500.00 Ohm.gv.png" ausgegeben
+
+$
+\end{lstlisting}
+
+\widerstand{1}{500}{1}{470}
+\widerstand{1}{500}{2}{500.38}
+\widerstand{1}{500}{3}{500}
+\widerstand{1}{500}{4}{500}
+
+
+\subsection{1400 $\Omega$}
+1400 $\Omega$ mit der bwinf-Widerstandsliste:
+
+\begin{lstlisting}
+$ python Implementierung/widerstand.py beispieldaten/widerstaende.txt 1400
+
+1 Widerstand: 1500 Ohm
+('einer', 1500)
+Zeichnung nach "1 Widerstände - 1500.00 Ohm.gv.png" ausgegeben
+
+2 Widerstände: 1406.5573770491803 Ohm
+('parallel', ('einer', 2200), ('einer', 3900))
+Zeichnung nach "2 Widerstände - 1406.56 Ohm.gv.png" ausgegeben
+
+3 Widerstände: 1400 Ohm
+('reihe', ('einer', 390), ('reihe', ('einer', 680), ('einer', 330)))
+Zeichnung nach "3 Widerstände - 1400.00 Ohm.gv.png" ausgegeben
+
+4 Widerstände: 1400.0 Ohm
+('reihe', ('parallel', ('einer', 1800), ('einer', 2700)),
+  ('reihe', ('einer', 220), ('einer', 100)))
+Zeichnung nach "4 Widerstände - 1400.00 Ohm.gv.png" ausgegeben
+
+$
+
+\end{lstlisting}
+
+\widerstand{2}{1400}{1}{1500}
+\widerstand{2}{1400}{2}{1406.56}
+\widerstand{2}{1400}{3}{1400}
+\widerstand{2}{1400}{4}{1400}
+
+
+
 
 \section{Quellcode (ausschnittsweise)}
-Unwichtige Teile des Programms sollen hier nicht abgedruckt werden. Dieser Teil sollte nicht mehr als 2–3 Seiten umfassen, maximal 10.
+\subsection{widerstand\_zusammenbauen}
+\lstinputlisting[language=Python]{code/widerstand_zusammenbauen.py}
+
+\subsection{widerstand\_zeichnen}
+\lstinputlisting[language=Python]{code/widerstand_zeichnen.py} 
+
+\subsection{widerstandswert\_berechnen}
+\lstinputlisting[language=Python]{code/widerstandswert_berechnen.py} 
 
 \end{document}
