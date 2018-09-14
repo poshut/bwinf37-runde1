@@ -4,27 +4,29 @@ import re
 import argparse
 from random import shuffle
 
-def twist_word(word: str):
-    if len(word) < 3:
-        return word
-    mittlere_buchstaben = list(word[1:-1])
+def wort_twisten(wort):
+    if len(wort) <= 2:
+        return wort
+    mittlere_buchstaben = list(wort[1:-1])
     shuffle(mittlere_buchstaben)
-    return word[0] + ''.join(mittlere_buchstaben) + word[-1]
+    return wort[0] + ''.join(mittlere_buchstaben) + wort[-1]
 
-def twist_text(text: str):
+def text_twisten(text):
+    # Der reguläre Ausdruck zum Finden von Wörtern im Text
     muster = re.compile(r'([a-zA-ZäöüÄÖÜß]+)')
     result = ""
     elemente = re.split(muster, text)
     for element in elemente:
         if re.fullmatch(muster, element):
-            result += twist_word(element)
+            result += wort_twisten(element)
         else:
             result += element
     return result
 
-def wort_zu_schluessel(wort: str):
+def wort_zu_schluessel(wort):
+    # Sortiere mittlere Buchstaben des Worts
     mittlere_buchstaben = ''.join(sorted(list(wort[1:-1])))
-    return (wort[0].lower(), wort[-1].lower(), mittlere_buchstaben)
+    return wort[0].lower() + mittlere_buchstaben + wort[-1].lower()
 
 def woerterbuch_erstellen(woerter_liste):
     woerterbuch = {}
@@ -40,31 +42,36 @@ def woerterbuch_erstellen(woerter_liste):
 def enttwist_text(text: str, woerterbuch_text: str):
     woerterbuch = woerterbuch_erstellen(woerterbuch_text.split("\n"))
     enttwisteter_text = []
+    # Der reguläre Ausdruck zum Finden von Wörtern im Text
     muster = re.compile(r'([a-zA-ZäöüÄÖÜß]+)')
     woerter_und_zeichen = re.split(muster, text)
-
     for element in woerter_und_zeichen:
+        # Ist das Element ein Wort?
         if re.fullmatch(muster, element):
             schluessel = wort_zu_schluessel(element)
             moegliche_woerter = woerterbuch.get(schluessel)
+            # Keine möglichen Wörter gefunden
             if moegliche_woerter is None:
                 print("Kein enttwistetes Wort für", '"' + element + '"', "gefunden...")
                 enttwisteter_text.append(element)
+            # Ein mögliches Wort gefunden
             elif len(moegliche_woerter) == 1:
                 if (element[0].isupper()):
                     moegliche_woerter[0] = moegliche_woerter[0][0].upper() + moegliche_woerter[0][1:]
                 enttwisteter_text.append(moegliche_woerter[0])
+            # Mehrere mögliche Woerter gefunden
             else:
                 benutztes_wort = moegliche_woerter[0]
                 print("Mehrere enttwistete Wörter für", '"' + element + '"', "gefunden: ", moegliche_woerter, ", benutze", '"' + benutztes_wort + '"', "...")
                 enttwisteter_text.append(benutztes_wort)
+        # Das Element ist kein Wort
         else:
             enttwisteter_text.append(element)
     print()
     return ''.join(enttwisteter_text)
 
 def twist_und_zurueck(text, woerterliste):
-    return enttwist_text(twist_text((text)), woerterliste)
+    return enttwist_text(text_twisten((text)), woerterliste)
 
 
 if __name__ == '__main__':
@@ -76,7 +83,7 @@ if __name__ == '__main__':
 
     if args.aktion == 'twist':
         with open(args.eingabe) as f:
-            print(twist_text(f.read()))
+            print(text_twisten(f.read()))
     elif args.aktion == 'enttwist':
         if args.woerter is None:
             print("Fehler: Keine Wörterliste angegeben!")
