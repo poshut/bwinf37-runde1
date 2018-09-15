@@ -59,10 +59,15 @@ def enttwist_text(text: str, woerterbuch_text: str):
                 if (element[0].isupper()):
                     moegliche_woerter[0] = moegliche_woerter[0][0].upper() + moegliche_woerter[0][1:]
                 enttwisteter_text.append(moegliche_woerter[0])
-            # Mehrere mögliche Woerter gefunden
+            # Mehrere mögliche Wörter gefunden
             else:
                 benutztes_wort = moegliche_woerter[0]
-                print("Mehrere enttwistete Wörter für", '"' + element + '"', "gefunden: ", moegliche_woerter, ", benutze", '"' + benutztes_wort + '"', "...")
+                if (element[0].isupper()):
+                    benutztes_wort = benutztes_wort[0].upper() + benutztes_wort[1:]
+                
+                # Warnung ausgeben, falls alle Wörter nicht gleich sind
+                if len(set(moegliche_woerter)) != 1:
+                    print("Mehrere enttwistete Wörter für", '"' + element + '"', "gefunden: ", moegliche_woerter, ", benutze", '"' + benutztes_wort + '"', "...")
                 enttwisteter_text.append(benutztes_wort)
         # Das Element ist kein Wort
         else:
