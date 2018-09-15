@@ -95,7 +95,7 @@ Mit diesem Verfahren lässt sich jedes Wort zufällig twisten.
 
 \subsection{Enttwisten}
 
-\paragraph{Die Wörterliste im Speicher}
+\subsubsection{Die Wörterliste im Speicher}
 Das Enttwisten ist herausfordernder als das Twisten, da das Programm ohne eine Wörterliste (oder Machine Learning) zurechtkommen kann, da es nicht weiß, welche Wörter überhaupt möglich sind. Als Vorbereitung zum Enttwisten muss eine Wörterliste eingelesen und vorbereitet werden. Damit das eigentliche Verfahren zum Enttwisten mit einer Geschwindigkeit von $O(n)$ (n ist die Anzahl der Wörter im Text) und unabhängig von der Länge der Wörterliste laufen kann, muss eine Datenstruktur verwendet werden, die gegeben einer Eingabe eines Worts spezieller Form eine Liste von möglichen Wörtern in $O(1)$ (konstanter Zeit) zuordnet. Eine geeignete Datenstruktur hierfür ist die Hashtabelle, da diese eine Zugriffszeit von $O(1)$ bietet, die ungenutzten Felder aufgrund geringer Datenmenge kein großes Problem darstellen und da diese nach initialer Befüllung nur noch zum Lesen benutzt wird. 
 
 Da jedes getwistete Wort eine beliebige Reihenfolge der mittleren Buchstaben innehaben kann, muss ein Verfahren bestehen, jede getwistete Version eines Originalworts in die gleiche Zeichenfolge umzuwandeln, ohne das Originalwort zu kennen. Währenddessen muss jedoch auch so viel Information wie möglich behalten werden (vor Allem der erste und letzte Buchstabe). Dies ist möglich, indem die mittleren Buchstaben eines getwisteten Worts alphabetisch sortiert werden, der erste und letzte jedoch gleich bleiben. Somit ist immernoch klar, was der erste und letzte Buchstabe waren und welche anderen Buchstaben in dem Wort enthalten sind. Dieses Wortform nenne ich \textbf{reduzierte Form}.
@@ -104,7 +104,7 @@ Dieses Verfahren eignet sich als Schlüssel für die Hashtabelle. Aus jedem getw
 
 Somit erstellen wir aus der Wörterliste eine Hashtabelle: Für jedes Wort wird die reduzierte Form als Schlüssel verwendet und der Liste von Wörtern mit diesem Schlüssel wird das richtige Wort angehängt.
 
-\paragraph{Bestimmung der enttwisteten Wörter}
+\subsubsection{Bestimmung der enttwisteten Wörter}
 Wenn ein getwistetes Wort gegeben ist, muss dieses Wort nun die reduzierte Form des Wortes gebildet werden, die der Hashtabelle als Schlüssel gegeben wird. Nun gibt es drei Möglichkeiten:
 \begin{enumerate}
   \item Es gibt kein Wort für die reduzierte Form in der Hashtabelle. Hier wird das getwistete Wort so belassen, wie es ist. Je nach Länge der Wörterliste tritt dieses Problem unterschiedlich häufig auf.
@@ -112,7 +112,7 @@ Wenn ein getwistetes Wort gegeben ist, muss dieses Wort nun die reduzierte Form 
   \item Es gibt mehrere Wörter für die reduzierte Form. Wir können irgendeins der Wörter nehmen, da wird nicht wissen, welches hier richtig ist. Die anderen Möglichkeiten sollten als Warnung ausgegeben werden.
 \end{enumerate}
 
-\paragraph{Optimierung}
+\subsubsection{Optimierung}
 Wenn ein Wort am Satzanfang steht, wird es immer großgeschrieben, nach manchen Satzzeichen, wie einem Doppelpunkt manchmal auch. Verben werden nach einem Artikel auch großgeschrieben (\textit{das Schwimmen}). Damit das Verfahren nicht alle diese Sonderfälle einzeln betrachtet, werden alle Schlüssel der Hashtabelle kleingeschrieben. Damit der Ausgabetext trotzdem zu einem Großteil richtig geschrieben ist, wird die Groß- und Kleinschreibung der Wörter in der Wörterliste in den Ergebnislisten der Hashtabelle übernommen. Außerdem wird ein Wort im Ausgabetext großgeschrieben, wenn das getwistete Wort im Eingabetext großgeschrieben ist, wie z.B. am Satzanfang.
 
 
@@ -124,11 +124,15 @@ Ich habe das Verfahren in Python umgesetzt. Zur Erkennung von Wörtern mithilfe 
 Um mit einem Skript zu twisten, enttwisten und beides nacheinander zu tun, parse ich mit \texttt{argparse} die Argumente. Das Skript wird mit \texttt{twist.py <aktion> <eingabedatei> [-w woerterliste]} aufgerufen, wobei Aktion entweder \texttt{twist}, \texttt{enttwist} oder \texttt{beides} sein kann. Eine Wörterliste wird nur bei \texttt{enttwist} oder \texttt{beides} benötigt.
 
 \section{Beispiele}
-Die Beispiele zur Twistfunktion des Programms von der bwinf-Website.
+Die Beispiele zur Twistfunktion des Programms sind von der bwinf-Website.
+
+\subsection{Twisten}
+\label{beispiel:twisten}
 
 \vspace{10pt}
-Beispiel 1:
-\begin{lstlisting}
+\subsubsection{Beispiel 1 von der bwinf-Website}
+\label{beispiel:twisten:1}
+\begin{lstlisting}[breaklines=true]
 $ python twist.py twist ../beispieldaten/twist1.txt 
 Der Twist  
 (Eiscnlgh tiswt = Dhureng, Vreuedhnrg)  
@@ -140,24 +144,93 @@ Tsiwt-Misuk gazentt wrid.
 \end{lstlisting}
 
 \vspace{10pt}
-Beispiel 2:
+\subsubsection{Beispiel 2 von der bwinf-Website}
+\label{beispiel:twisten:2}
 \begin{lstlisting}[breaklines=true]
   $ python twist.py twist ../beispieldaten/twist2.txt 
 Hat der alte Hmeixeenster scih doch eniaml wegebeegbn! Und nun soelln sneie Getsier auch nach meniem Wellin leebn. Sinee Wort und Werke mkret ich und den Bruach, und mit Gietsästksere tu ich Wuednr acuh.
 \end{lstlisting}
 
 \vspace{10pt}
-Beispiel 3:
+\subsubsection{Beispiel 3 von der bwinf-Website}
+\label{beispiel:twisten:3}
 \begin{lstlisting}[breaklines=true]
 $ python twist.py twist ../beispieldaten/twist3.txt 
 Ein Rrauseatnt, wehecls a la crate aebirett, beeitt sien Agnboet ohne eine vhreor fleeggestte Mrfnneoehiülgee an. Dducarh heabn die Gätse zawr mher Sielpaurm bei der Whal ierhr Seepisn, für das Rnrauaetst eeteshtnn jeodch zueäihczstlr Afnuwad, da wengeir Panrisgnhlhucsieet vohneadrn ist.
 \end{lstlisting}
 
 \vspace{10pt}
-Beispiel 4:
+\subsubsection{Beispiel 4 von der bwinf-Website}
+\label{beispiel:twisten:4}
 \begin{lstlisting}[breaklines=true]
 $ python twist.py twist ../beispieldaten/twist4.txt 
 Autusga Ada Bryon Knig, Ctnouess of Levlaoce, war enie birsthice Adliege und Mitetiakmerahn, die als die etsre Pragrioemriermn üpubaerht glit. Brtiees 100 Jahre vor dem Akuomefmn der etsren Paerprmrgceahomsrin enarsn sie enie Rcehen-Mhnaceik, der egniie Kzponete mneeordr Paprhoariemcrmregsn vgowanhrem.
+\end{lstlisting}
+
+\subsection{Enttwisten}
+Das erste Beispiel zum Enttwisten ist von der bwinf-Website, für alle Anderen wurde die Programmausgabe der Beispiele von \ref{beispiel:twisten} verwendet.
+
+\subsubsection{Beispiel von der bwinf-Website}
+\label{beispiel:enttwisten:1}
+\begin{lstlisting}[breaklines=true]
+  $ python twist.py enttwist ../beispieldaten/enttwist.txt -w ../beispieldaten/woerterliste.txt
+Kein enttwistetes Wort für "Twsit" gefunden...
+Kein enttwistetes Wort für "tiwst" gefunden...
+Mehrere enttwistete Wörter für "ein" gefunden:  ['ein', 'ein'] , benutze "ein" ...
+Kein enttwistetes Wort für "Mdaotenz" gefunden...
+Mehrere enttwistete Wörter für "frhüen" gefunden:  ['frühen', 'führen'] , benutze "frühen" ...
+Kein enttwistetes Wort für "n" gefunden...
+Kein enttwistetes Wort für "Roll" gefunden...
+Kein enttwistetes Wort für "Ryhthm" gefunden...
+Kein enttwistetes Wort für "and" gefunden...
+Kein enttwistetes Wort für "Twsit" gefunden...
+
+Der Twsit  
+(Englisch tiwst = Drehung, Verdrehung)  
+war ein Mdaotenz im 4/4-Takt,  
+Der in den frühen 1960er Jahren populär  
+wurde und zu  
+Rock'n'Roll, Ryhthm and Blues oder spezieller 
+Twsit-Musik getanzt wird.
+\end{lstlisting}
+
+\subsubsection{Ausgabe von \ref{beispiel:twisten:2}}
+\label{beispiel:enttwisten:2}
+\begin{lstlisting}[breaklines=true]
+$ python twist.py enttwist ../beispieldaten/ausgabe_von_2.txt -w ../beispieldaten/woerterliste.txt
+Kein enttwistetes Wort für "wegebeegbn" gefunden...
+Kein enttwistetes Wort für "tu" gefunden...
+
+Hat der alte Hexenmeister sich doch einmal wegebeegbn! Und nun sollen seine Geister auch nach meinem Willen leben. Seine Wort Und Werke merkt ich Und den Brauch, Und mit Geistesstärke tu ich Wunder auch.
+\end{lstlisting}
+
+\subsubsection{Ausgabe von \ref{beispiel:twisten:3}}
+\label{beispiel:enttwisten:3}
+\begin{lstlisting}[breaklines=true]
+$ python twist.py enttwist ../beispieldaten/ausgabe_von_3.txt -w ../beispieldaten/woerterliste.txt
+Kein enttwistetes Wort für "a" gefunden...
+Kein enttwistetes Wort für "la" gefunden...
+Kein enttwistetes Wort für "crate" gefunden...
+Mehrere enttwistete Wörter für "aebirett" gefunden:  ['arbeitet', 'abrietet'] , benutze "arbeitet" ...
+Kein enttwistetes Wort für "Mrfnneoehiülgee" gefunden...
+Kein enttwistetes Wort für "Panrisgnhlhucsieet" gefunden...
+
+Ein Restaurant, welches a la crate arbeitet, bietet sein Angebot ohne eine vorher festgelegte Mrfnneoehiülgee an. Dadurch haben die Gäste zwar mehr Spielraum bei der Wahl ihrer Speisen, für das Restaurant entstehen jedoch zusätzlicher Aufwand, da weniger Panrisgnhlhucsieet vorhanden ist.
+\end{lstlisting}
+
+\subsubsection{Ausgabe von \ref{beispiel:twisten:4}}
+\label{beispiel:enttwisten:4}
+\begin{lstlisting}[breaklines=true]
+$ python twist.py enttwist ../beispieldaten/ausgabe_von_4.txt -w ../beispieldaten/woerterliste.txt
+Kein enttwistetes Wort für "Autusga" gefunden...
+Kein enttwistetes Wort für "Bryon" gefunden...
+Kein enttwistetes Wort für "Knig" gefunden...
+Kein enttwistetes Wort für "Ctnouess" gefunden...
+Kein enttwistetes Wort für "of" gefunden...
+Kein enttwistetes Wort für "Levlaoce" gefunden...
+Mehrere enttwistete Wörter für "Brtiees" gefunden:  ['bereits', 'Bieters', 'breites', 'breites'] , benutze "Bereits" ...
+
+Autusga Ada Bryon Knig, Ctnouess of Levlaoce, war eine britische Adelige und Mathematikerin, die als die erste Programmiererin überhaupt gilt. Bereits 100 Jahre vor dem Aufkommen der ersten Programmiersprachen ersann sie eine Rechen-Mechanik, der einige Konzepte moderner Programmiersprachen vorwegnahm.
 \end{lstlisting}
 
 
