@@ -68,14 +68,164 @@
 Das Problem, mehrere Rechtecke unterschiedlicher Größe in eines zu packen, ist schon länger bekannt, da es Anwendung im Internet findet, z.B. wenn mehrere kleine Bilddateien in eine möglichst kleine gepackt werden sollen. Es ist auch bekannt, dass das Problem $NP$-komplett ist, d.h. es gibt keine optimale Lösung, die in Polymomialzeit läuft, man kann eine optimale Lösung also nur durch Ausprobieren aller Möglichkeiten bestimmen \cite{korf}. Deshalb kann jede effiziente Lösung nur ein \textit{fast} perfektes Ergebnis produzieren; mann muss also zwischen Laufzeit und Genauigkeit abwägen.
 
 \subsection{Das Verfahren}
+Ich benutze ein Verfahren, das von Richard E. Korf in seinem Artikel \textit{Rectangle Packing: Initial Results} beschrieben wurde und \textbf{HIER FEHLT DAS ZITAT} genauer beschrieben ist.
 
-Da das Problem schon länger bekannt ist, benutze ich auch zum Teil ein bekanntes Verfahren: \textit{Next-Fit-Descreasing-Height} (\textit{NFDH}): Alle Rechtecke werden absteigend nach Länge sortiert. Ein großes Rechteck mit unendlicher Länge und der größten Breite, die ein einzelner Garten hat, wird erstellt. Für jedes Rechteck $R$ wird überprüft, ob $R$ von der Breite noch in die momentane Ebene passt. Falls dies nicht der Fall ist, wird eine neue Ebene mit der Länge von $R$ erstellt. Da alle Rechtecke nach $R$ eine geringere Länge als $R$ haben, passen sie immer von der Länge in die momentane Ebene. Wenn alle Rechtecke im großen Rechteck platziert sind, wird die Länge des großen Rechtecks so reduziert, dass dessen Länge nicht höher als die Gesamtlänge der Ebenen ist.
+\begin{enumerate}
+  \item Alle Rechtecke werden nach ihrer Länge absteigend sortiert.
+  \item Daraufhin wird das erste umgebende Rechteck erstellt. Dieses wird so gewählt, dass es als Länge die Länge des längsten Rechtecks hat und dass es als Breite die Summe aller Breiten hat.
+  \item Nun wird versucht, das umgebende Rechteck so effizient wie möglich zu benutzen, um alle kleinen Rechtecke unterzubringen. Dabei soll versucht werden, die genutzte Breite zu minimieren. Deshalb wird ein Rechteck nach dem anderen so weit nach links platziert wie möglich. Falls es mehrere mögliche Orte gibt, die alle gleich weit links sind, wird der oberste ausgewählt.
+  \item Falls alle Rechtecke untergebracht werden konnten, wird die neue Lösung mit der bestehenden Lösung verglichen und die übernommen, die die kleinere Fläche besitzt.
+  \item Falls alle Rechtecke untergebracht werden konnten, wird die Breite des umgebenden Rechtecks auf die der Lösung minus 1 reduziert. Ansonsten wird die Höhe um 1 erhöht.
+  \item Falls die Länge des umgebenden Rechtecks kleiner als die des längsten Rechtecks ist, sind wir fertig, da alle Rechtecke nun unmöglich untergebracht werden können, ansonsten fangen wir wieder bei Schritt 3 mit dem neuen umgebenden Rechteck an.
+\end{enumerate}
 
-Die Breite des umgebenden Rechtecks kann zwischen der maximalen Breite eines einzelnen Rechtecks und der Gesamtbreite aller Rechtecke variiert werden. Aus Gründen der Einfachheit führe ich das oben beschriebene Platzierungsverfahren für diese und alle Breiten dazwischen aus.
+\subsection{Performance}
+Die Performance des Verfahrens hängt zum Einen von der Anzahl der Gärten ab, jedoch auch von der Differenz zwischen Gesamtlänge und maximaler Länge von einzelnen Rechtecken. Unabhängig davon braucht das Suchverfahren länger, je mehr Positionen für jedes Rechteck infrage kommen. Deshalb ist meine Einschätzung der Performance $P \approx O($\textit{anzahl der gärten}$*$\textit{gesamtlänge}$^2*$\textit{gesamtbreite}$)$. In der Umsetzung kommt es bei bis zu 10 Gärten mit Längen und Breiten kaum zu Performanceschwierigkeiten, hier könnte eine bessere Methode zur Bestimmung der optimialen Position der kleinen Rechtecke helfen.
 
+ 
 \section{Umsetzung}
+Das Verfahren wurde in Python 3 umgesetzt.
+
+\subsection{Darstellung im Speicher}
+Ein noch zu platzierendes Rechteck wird als Tupel zweier Zahlen dargestellt: Eine Länge und eine Breite. Ein platziertes Rechteck ist ein Tupel aus der Länge, der Breite, einer $x$-Position und einer $y$-Position. Somit ist eine Lösung ein Tupel mit einer Liste von platzierten Gärten, der benötigten Länge und Breite. Um den Quellcode lesbarer zu gestalten, definiere ich die Funktionen \texttt{r\_laenge}, \texttt{r\_breite}, \texttt{r\_x}, und \texttt{r\_y}, die die einzelnen Teile des Rechtecks zurückgeben.
+Um einfach schauen zu können, ob auf einer Position $(x,y)$ schon ein Rechteck liegt, wird eine rechteckige Matrix mit den Werten $0$ für \textit{leer} und $1$ für \textit{voll} verwendet. Diese wird bei Änderung des umgebenden Rechtecks neu initialisiert und in allen Unterfunktionen von \texttt{anordnen} verwendet.
+
+\subsection{Teile des Programms}
+\subsubsection{genuegend\_platz}
+In der Funktion \texttt{genuegend\_platz} wird geprüft, ob an der Position $(x,y)$ genügend Platz für das gegebene Rechteck ist. Da die Rechtecke nach absteigender Länge platziert werden, reicht es, \textbf{HIER NOCHMAL NACHDENKEN} die äußeren Felder in der Matrix auf andere Rechtecke zu überprüfen. Dies ist der Fall, da es unmöglich ist, ein Rechteck mit größerer Länge in einem mit kleinerer Länge einzuschließen. Wichtig ist, zu überprüfen, ob auch noch genügend Platz im umgebenden Rechteck nach rechts und nach unten vorhanden ist.
+
+\subsubsection{eins\_platzieren}
+In der Funktion \texttt{eins\_platzieren} ist ein Rechteck und die Matrix der bereits platzierten Rechtecke gegeben. Die Funktion ruft \texttt{genuegend\_platz} von oben nach unten und von links nach rechts auf. So wird immer die Position gefunden, bei der genügend Platz vorhanden ist, die so weit links liegt wie möglich. Falls es zwei dieser Positionen gibt, wählt dieses Vorgehen die aus, die weiter oben ist. Falls eine Position gefunden werden konnte, wählt es außerdem die, die sich weiter oben befindet. Wenn eine Position gefunden wurde, wird nun die Matrix so verändert, dass die neu belegten Felder \textit{voll} sind. Daraufhin wird ein platziertes Rechteck zurückgegeben. Falls Keine Position gefunden werden konnte, wird \texttt{None} zurückgegeben.
+
+\subsubsection{anordnen}
+Der Funktion \texttt{anordnen} ist eine absteigend nach Länge sortierte Liste von zu platzierenden Rechtecken und eine Länge und Breite des umgebenden Rechtecks gegeben. Sie erstellt eine leere Matrix und ruft für alle gegebenen Rechtecke \texttt{eins\_platzieren} auf. Als letztes wird berechnet, wie viel der gegebenen Breite tatsächlich benötigt wurde.
+
+\subsubsection{Auf Modulebene}
+\textit{Hinweis}: Da aus der Aufgabe kein Eingabeformat hervorgeht, werden die Rechtecke im Programm verändert. Da Python nicht kompiliert werden muss, ist dies für den Benutzer zumutbar. 
+
+Auf Modulebene werden als Erstes die Rechtecke absteigend nach Höhe sortiert. Danach werden Grundmaße, wie die Maximallänge, Maximalbreite, Gesamtbreite und Gesamtflaeche bestimmt. Nach dem oben beschriebenen Verfahren werden die momentane Länge und Breite verändert die Lösung mit minimaler Fläche wird gespeichert. Zuletzt wird der Unterschied zwischen optimaler Fläche und Lösungsfläche bestimmt und mit den Positionen, Maßen und Flächen der einzelnen Gärten ausgegeben.
+
+\section{Optimierung}
+Um das Verfahren für große Rechtecke zu optimieren, führe ich einen \textit{Faktor} ein. Dieser ist der größte gemeinsame Teiler aller Maße der Rechtecke, der über den euklidischen Algorithmus ermittelt wird. Aufgrund dieser Eigenschaft muss die Breite nicht um 1 verkleinert werden, sondern direkt um $faktor$, da man alle Maße durch $faktor$ teilen kann, dass Verfahren schneller durchführen kann und dann wieder alle Maße mit $faktor$ multiplizieren kann. Dies hilft bei Beispiel \textbf{CROSSREF HIER} weiter, jedoch nicht bei Beispiel \textbf{CROSSREF HIER}.
+
+Eine andere Möglichkeit, die Umsetzung zu optimieren wäre, statt einer Python-\texttt{list} etwas zu nehmen, was für jedes Bit einen Zustand speichern kann. Dadurch würden Speichernutzung und Zugriffsgeschwindigkeiten gesenkt werden (durch höhere Geschwindigkeit einer spezialisierten Lösungen und den Cache im Prozessor).
 
 \section{Beispiele}
+
+
+\subsection{Triviales Beispiel: Kein Rechteck}
+Ein triviales Beispiel ohne ein Rechteck. Hier sollte das Ergebnis $0m^2$ groß sein. Die Änderung im Programm lautet hier:
+\begin{lstlisting}[language=Python]
+rechtecke = []
+\end{lstlisting}
+Die Ausgabe:
+\begin{lstlisting}
+$ python schrebergaerten.py
+0 m x 0 m => 0 m^2, 0 m^2 verschwendet
+\end{lstlisting}
+
+\subsection{Triviales Beispiel: Ein Rechteck}
+Ein triviales Beispiel mit nur einem $50m*25m$-Rechteck. Hier sollte das Ergebnis $1250m^2$ groß sein. Die Änderung im Programm lautet hier:
+\begin{lstlisting}[language=Python]
+rechtecke = [
+    (50, 25)
+]
+\end{lstlisting}
+Die Ausgabe:
+\begin{lstlisting}
+$ python schrebergaerten.py
+25 m x 50 m => 1250 m^2, 0 m^2 verschwendet
+Garten 50 m x 25 m im Punkt (0, 0)
+\end{lstlisting}
+
+
+\subsection{Triviales Beispiel: Vier Quadrate} 
+Ein anderes Beispiel ist eines mit vier $25m*25m$-Quadraten. Hier sollte das Ergebnis $2500m^2$ groß sein. Die Änderung im Programm lautet hier:
+\begin{lstlisting}[language=Python]
+rechtecke = [
+    (25, 25),
+    (25, 25),
+    (25, 25),
+    (25, 25)
+]
+\end{lstlisting}
+Die Ausgabe:
+\begin{lstlisting}
+$ python schrebergaerten.py
+100 m x 25 m => 2500 m^2, 0 m^2 verschwendet
+Garten 25 m x 25 m im Punkt (0, 0)
+Garten 25 m x 25 m im Punkt (25, 0)
+Garten 25 m x 25 m im Punkt (50, 0)
+Garten 25 m x 25 m im Punkt (75, 0)
+\end{lstlisting}
+
+
+\subsection{Das Beispiel aus der Aufgabe}
+Es gibt vier Rechtecke: 
+\begin{itemize}
+  \item $25m*15m$
+  \item $15m*30m$
+  \item $15m*25m$
+  \item $25m*20m$
+\end{itemize}
+Die Änderung im Programm lautet:
+\begin{lstlisting}[language=Python]
+rechtecke = [
+    (25, 15),
+    (15, 30),
+    (15, 25),
+    (25, 20),
+]
+\end{lstlisting}
+Die Ausgabe:
+\begin{lstlisting}
+  $ python schrebergaerten.py
+65 m x 30 m => 1950 m^2, 250 m^2 verschwendet
+Garten 25 m x 15 m im Punkt (0, 0)
+Garten 25 m x 20 m im Punkt (15, 0)
+Garten 15 m x 30 m im Punkt (35, 0)
+Garten 15 m x 25 m im Punkt (35, 15)
+\end{lstlisting}
+
+Somit ist das Programm nur ein wenig schlechter als das Beispiel ($1950m^2$ vs $1650m^2$).
+
+
+\subsection{Ein größeres Beispiel, lösbar mithilfe des Faktors}
+
+\begin{lstlisting}[language=Python]
+rechtecke = [
+    (700, 300),
+    (500, 900),
+    (350, 200),
+    (600, 800),
+    (50, 100),
+    (500, 600)
+]
+\end{lstlisting}
+Ausgabe (mit unmerklicher Verzögerung):
+\begin{lstlisting}
+$ python schrebergaerten.py
+1500 m x 1200 m => 1800000 m^2, 285000 m^2 verschwendet
+Garten 700 m x 300 m im Punkt (0, 0)
+Garten 600 m x 800 m im Punkt (300, 0)
+Garten 500 m x 900 m im Punkt (0, 700)
+Garten 500 m x 600 m im Punkt (900, 600)
+Garten 350 m x 200 m im Punkt (1100, 0)
+Garten 50 m x 100 m im Punkt (300, 600)
+\end{lstlisting}
+
+\subsection{Ein größeres Beispiel, nicht lösbar mithilfe des Faktors}
+\begin{lstlisting}[language=Python]
+rechtecke = [
+    (700, 299),
+    (500, 900),
+    (350, 200),
+    (600, 800),
+    (50, 100),
+    (500, 600)
+]
+\end{lstlisting}
+Ausgabe beendet nicht.
 
 \section{Quellcode (ausschnittsweise)}
 

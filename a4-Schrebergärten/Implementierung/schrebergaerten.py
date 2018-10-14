@@ -77,59 +77,83 @@ def anordnen(rechtecke, breite, laenge):
     
     return (loesung, laenge, maximal_benoetigte_breite)
 
-# Länge mal Breite
-# rechtecke = [
-#     (25, 15),
-#     (30, 15),
-#     (25, 20),
-#     (25, 15),
-# ]
 
-rechtecke = [
-    (25,25),
-    (25,25),
-    (25,25),
-    (25,25),
-]
+if __name__ == "__main__":
+    # Länge mal Breite
+    rechtecke = [
+        (700, 299),
+        (500, 900),
+        (350, 200),
+        (600, 800),
+        (50, 100),
+        (500, 600)
+    ]
 
-sortierte_rechtecke = sorted(rechtecke, key=lambda x: r_laenge(x), reverse=True)
+    if len(rechtecke) == 0:
+        print("0 m x 0 m => 0 m^2, 0 m^2 verschwendet")
+        exit()
 
-# Breite aller Rechtecke zusammen
-breite_gesamt = 0
-for r in rechtecke:
-    breite_gesamt += r_breite(r)
+    def gcd(a,b):
+        while b != 0:
+            a, b = b, a % b
+        return a
 
-# Breite, die das breiteste Rechteck hat
-hoechste_breite = r_breite(max(rechtecke, key=lambda r: r_breite(r)))
+    gesamtflaeche = 0
+    for r in rechtecke:
+        gesamtflaeche += r_laenge(r) * r_breite(r)
+    
+    faktor = r_laenge(rechtecke[0])
+    for r in rechtecke:
+        faktor = gcd(faktor, r_laenge(r))
+        faktor = gcd(faktor, r_breite(r))
+    
 
+    rechtecke = list(map(lambda r: (r[0] // faktor, r[1] // faktor), rechtecke))
+    sortierte_rechtecke = sorted(rechtecke, key=lambda x: r_laenge(x), reverse=True)
 
-bestes_ergebnis = []
-
-momentane_laenge = r_laenge(sortierte_rechtecke[0])
-momentane_breite = breite_gesamt
-
-while momentane_breite >= hoechste_breite:
-    ergebnis = anordnen(sortierte_rechtecke, momentane_breite, momentane_laenge)
-    if ergebnis is not None:
-        #print("Garten %d m x %d m --> %s" % (momentane_laenge, momentane_breite, ergebnis))
-
-        # Alle Anordnungen, die die gleicht Breite haben werden, überspringen
-        momentane_breite = ergebnis[2] - 1
-
-        # Ergebnis speichern
-        if len(bestes_ergebnis) == 0 or bestes_ergebnis[1] * bestes_ergebnis[2] > ergebnis[1] * ergebnis[2]:
-            bestes_ergebnis = ergebnis
-    else:
-        #print("Garten %d m x %d m --> Kein Ergebnis" % (momentane_laenge, momentane_breite))
-        momentane_laenge += 1
+    # Breite aller Rechtecke zusammen
+    gesamtbreite = 0
+    for r in rechtecke:
+        gesamtbreite += r_breite(r)
+    # Breite, die das breiteste Rechteck hat
+    maximalbreite = r_breite(max(rechtecke, key=lambda r: r_breite(r)))
 
 
-min_flaeche = 0
-for r in rechtecke:
-    min_flaeche += r_laenge(r) * r_breite(r)
+    maximallaenge = r_laenge(sortierte_rechtecke[0])
 
-beste_flaeche = bestes_ergebnis[1] * bestes_ergebnis[2]
 
-print("%d m x %d m => %d m^2, %d m^2 verschwendet" % (bestes_ergebnis[2], bestes_ergebnis[1], beste_flaeche, beste_flaeche - min_flaeche))
-for r in bestes_ergebnis[0]:
-    print("Garten %d m x %d m im Punkt (%d, %d)" % (r_laenge(r), r_breite(r), r_x(r), r_y(r)))
+
+    bestes_ergebnis = []
+
+    momentane_laenge = maximallaenge
+    momentane_breite = gesamtbreite
+
+    while momentane_breite >= maximalbreite:
+        ergebnis = anordnen(sortierte_rechtecke, momentane_breite, momentane_laenge)
+        if ergebnis is not None:
+            #rint("Garten %d m x %d m --> %s" % (momentane_laenge, momentane_breite, ergebnis))
+
+            # Alle Anordnungen, die die gleicht Breite haben werden, überspringen
+            momentane_breite = ergebnis[2] - 1
+
+            # Ergebnis speichern
+            if len(bestes_ergebnis) == 0 or bestes_ergebnis[1] * bestes_ergebnis[2] > ergebnis[1] * ergebnis[2]:
+                bestes_ergebnis = ergebnis
+        else:
+            #print("Garten %d m x %d m --> Kein Ergebnis" % (momentane_laenge, momentane_breite))
+            momentane_laenge += 1
+
+
+    # Alles wieder um Faktor vergößern
+    bestes_ergebnis = (
+        list(map(lambda r: tuple(map(lambda g: g*faktor, r)), bestes_ergebnis[0])),
+        faktor * bestes_ergebnis[1],
+        faktor * bestes_ergebnis[2]
+    )
+
+
+    loesungsflaeche = bestes_ergebnis[1] * bestes_ergebnis[2]
+
+    print("%d m x %d m => %d m^2, %d m^2 verschwendet" % (bestes_ergebnis[2], bestes_ergebnis[1], loesungsflaeche, (loesungsflaeche - gesamtflaeche)))
+    for r in bestes_ergebnis[0]:
+        print("Garten %d m x %d m im Punkt (%d, %d)" % (r_laenge(r), r_breite(r), r_x(r), r_y(r)))
