@@ -50,8 +50,7 @@ if __name__ == "__main__":
             momentane_breite = ergebnis[2] - 1
 
             # Ergebnis speichern
-            if len(bestes_ergebnis) == 0 or bestes_ergebnis[1] * bestes_ergebnis[2] > 
-                        ergebnis[1] * ergebnis[2]:
+            if len(bestes_ergebnis) == 0 or bestes_ergebnis[1] * bestes_ergebnis[2] > ergebnis[1] * ergebnis[2]:
                 bestes_ergebnis = ergebnis
         else:
             momentane_laenge += 1
@@ -67,9 +66,6 @@ if __name__ == "__main__":
 
     loesungsflaeche = bestes_ergebnis[1] * bestes_ergebnis[2]
 
-    print("%d m x %d m => %d m^2, %d m^2 verschwendet" % 
-                (bestes_ergebnis[2], bestes_ergebnis[1], loesungsflaeche, 
-                (loesungsflaeche - gesamtflaeche)))
+    print("%d m x %d m => %d m^2, %d m^2 verschwendet" % (bestes_ergebnis[2], bestes_ergebnis[1], loesungsflaeche, (loesungsflaeche - gesamtflaeche)))
     for r in bestes_ergebnis[0]:
-        print("Garten %d m x %d m im Punkt (%d, %d)" % 
-                (r_laenge(r), r_breite(r), r_x(r), r_y(r)))
+        print("Garten %d m x %d m im Punkt (%d, %d)" % (r_laenge(r), r_breite(r), r_x(r), r_y(r)))

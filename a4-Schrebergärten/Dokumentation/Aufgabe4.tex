@@ -7,6 +7,8 @@
 \usepackage[backend=biber]{biblatex}
 \addbibresource{schrebergaerten.bib}
 
+\usepackage{csquotes}
+
 % Die nächsten drei Felder bitte anpassen: 
 \newcommand{\Name}{Richard Wohlbold} % Teamname oder eigenen Namen angeben
 \newcommand{\TeamId}{00012}                       % Team-ID aus dem PMS
@@ -132,7 +134,7 @@ rechtecke = []
 \end{lstlisting}
 Die Ausgabe:
 \begin{lstlisting}
-$ python schrebergaerten.py
+$ python3 schrebergaerten.py
 0 m x 0 m => 0 m^2, 0 m^2 verschwendet
 \end{lstlisting}
 
@@ -145,7 +147,7 @@ rechtecke = [
 \end{lstlisting}
 Die Ausgabe:
 \begin{lstlisting}
-$ python schrebergaerten.py
+$ python3 schrebergaerten.py
 25 m x 50 m => 1250 m^2, 0 m^2 verschwendet
 Garten 50 m x 25 m im Punkt (0, 0)
 \end{lstlisting}
@@ -163,7 +165,7 @@ rechtecke = [
 \end{lstlisting}
 Die Ausgabe:
 \begin{lstlisting}
-$ python schrebergaerten.py
+$ python3 schrebergaerten.py
 100 m x 25 m => 2500 m^2, 0 m^2 verschwendet
 Garten 25 m x 25 m im Punkt (0, 0)
 Garten 25 m x 25 m im Punkt (25, 0)
@@ -191,7 +193,7 @@ rechtecke = [
 \end{lstlisting}
 Die Ausgabe:
 \begin{lstlisting}
-  $ python schrebergaerten.py
+  $ python3 schrebergaerten.py
 65 m x 30 m => 1950 m^2, 250 m^2 verschwendet
 Garten 25 m x 15 m im Punkt (0, 0)
 Garten 25 m x 20 m im Punkt (15, 0)
@@ -217,7 +219,7 @@ rechtecke = [
 \end{lstlisting}
 Ausgabe (mit unmerklicher Verzögerung):
 \begin{lstlisting}
-$ python schrebergaerten.py
+$ python3 schrebergaerten.py
 1500 m x 1200 m => 1800000 m^2, 285000 m^2 verschwendet
 Garten 700 m x 300 m im Punkt (0, 0)
 Garten 600 m x 800 m im Punkt (300, 0)
@@ -245,20 +247,20 @@ Ausgabe beendet nicht.
 
 \subsection{genuegend\_platz}
 Die Funktion \texttt{genuegend\_platz}, die prüft, ob in einem Punkt $(x,y)$ genügend Platz für ein Rechteck mit der Länge \texttt{laenge} und der Breite \texttt{breite} ist. Dies wird mit der Matrix \texttt{matrix} gemacht:
-\lstinputlisting[language=Python]{code/genuegend_platz.py}
+\lstinputlisting[language=Python,breaklines=true]{code/genuegend_platz.py}
 
 \subsection{eins\_platzieren.py}
 Die Funktion \texttt{eins\_platzieren}, die die ideale Position für ein Rechteck der Länge \texttt{laenge} und der Breite \texttt{breite} findet. Dazu wird die Matrix \texttt{matrix} gebraucht, um zu überprüfen, welche Felder bereits belegt sind.
-\lstinputlisting[language=Python]{code/eins_platzieren.py}
+\lstinputlisting[language=Python,breaklines=true]{code/eins_platzieren.py}
 
 \subsection{anordnen}
 Die Funktion \texttt{anordnen}, die versucht, eine Liste von Rechtecken \texttt{rechtecke} in einem Rechteck der Länge \texttt{laenge} und der Breite \texttt{breite} unterzubringen:
-\lstinputlisting[language=Python]{code/anordnen.py}
+\lstinputlisting[language=Python,breaklines=true]{code/anordnen.py}
    
 \subsection{Modulebene}
 Auf Modulebene wird versucht, die Rechtecke um ihren größten gemeinsamen Teiler herunterzuskalieren. Daraufhin wird \texttt{anordnen} so aufgerufen, dass ein optimales Ergebnis entsteht. Hier müssen auch die Rechtecke eingegeben werden:
 
-\lstinputlisting[language=Python]{code/modulebene.py}
+\lstinputlisting[language=Python,breaklines=true]{code/modulebene.py}
 
 \printbibliography 
 
