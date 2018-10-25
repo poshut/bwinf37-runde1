@@ -7,7 +7,7 @@
 \usepackage[backend=biber]{biblatex}
 \addbibresource{schrebergaerten.bib}
 
-% Die nächsten drei Felder bitte anpassen:
+% Die nächsten drei Felder bitte anpassen: 
 \newcommand{\Name}{Richard Wohlbold} % Teamname oder eigenen Namen angeben
 \newcommand{\TeamId}{00012}                       % Team-ID aus dem PMS
 \newcommand{\Aufgabe}{Aufgabe 4: Schrebergärten} % Aufgabennummer und -name
@@ -44,6 +44,18 @@
   keepspaces=true, % keeps spaces in text
   numbers=left, numbersep=5pt, showspaces=false,showstringspaces=true,
   showtabs=false, stepnumber=2, tabsize=2, title=\lstname
+}
+\lstset{literate=%
+    {Ö}{{\"O}}1
+    {Ä}{{\"A}}1
+    {Ü}{{\"U}}1
+    {ß}{{\ss}}1
+    {ü}{{\"u}}1
+    {ä}{{\"a}}1
+    {ö}{{\"o}}1
+    {~}{{\textasciitilde}}1
+    {“}{{"}}1
+    {„}{{"}}1
 }
 
 % Diese beiden Pakete müssen als letztes geladen werden
@@ -106,7 +118,7 @@ Der Funktion \texttt{anordnen} ist eine absteigend nach Länge sortierte Liste v
 Auf Modulebene werden als Erstes die Rechtecke absteigend nach Höhe sortiert. Danach werden Grundmaße, wie die Maximallänge, Maximalbreite, Gesamtbreite und Gesamtflaeche bestimmt. Nach dem oben beschriebenen Verfahren werden die momentane Länge und Breite verändert die Lösung mit minimaler Fläche wird gespeichert. Zuletzt wird der Unterschied zwischen optimaler Fläche und Lösungsfläche bestimmt und mit den Positionen, Maßen und Flächen der einzelnen Gärten ausgegeben.
 
 \section{Optimierung}
-Um das Verfahren für große Rechtecke zu optimieren, führe ich einen \textit{Faktor} ein. Dieser ist der größte gemeinsame Teiler aller Maße der Rechtecke, der über den euklidischen Algorithmus ermittelt wird. Aufgrund dieser Eigenschaft muss die Breite nicht um 1 verkleinert werden, sondern direkt um $faktor$, da man alle Maße durch $faktor$ teilen kann, dass Verfahren schneller durchführen kann und dann wieder alle Maße mit $faktor$ multiplizieren kann. Dies hilft bei Beispiel \textbf{CROSSREF HIER} weiter, jedoch nicht bei Beispiel \textbf{CROSSREF HIER}.
+Um das Verfahren für große Rechtecke zu optimieren, führe ich einen \textit{Faktor} ein. Dieser ist der größte gemeinsame Teiler aller Maße der Rechtecke, der über den euklidischen Algorithmus ermittelt wird. Aufgrund dieser Eigenschaft muss die Breite nicht um 1 verkleinert werden, sondern direkt um $faktor$, da man alle Maße durch $faktor$ teilen kann, dass Verfahren schneller durchführen kann und dann wieder alle Maße mit $faktor$ multiplizieren kann. Dies hilft bei Beispiel \ref{faktor-loesbar} weiter, jedoch nicht bei Beispiel \ref{faktor-nicht-loesbar}.
 
 Eine andere Möglichkeit, die Umsetzung zu optimieren wäre, statt einer Python-\texttt{list} etwas zu nehmen, was für jedes Bit einen Zustand speichern kann. Dadurch würden Speichernutzung und Zugriffsgeschwindigkeiten gesenkt werden (durch höhere Geschwindigkeit einer spezialisierten Lösungen und den Cache im Prozessor).
 
@@ -191,6 +203,7 @@ Somit ist das Programm nur ein wenig schlechter als das Beispiel ($1950m^2$ vs $
 
 
 \subsection{Ein größeres Beispiel, lösbar mithilfe des Faktors}
+\label{faktor-loesbar}
 
 \begin{lstlisting}[language=Python]
 rechtecke = [
@@ -215,6 +228,7 @@ Garten 50 m x 100 m im Punkt (300, 600)
 \end{lstlisting}
 
 \subsection{Ein größeres Beispiel, nicht lösbar mithilfe des Faktors}
+\label{faktor-nicht-loesbar}
 \begin{lstlisting}[language=Python]
 rechtecke = [
     (700, 299),
@@ -228,6 +242,23 @@ rechtecke = [
 Ausgabe beendet nicht.
 
 \section{Quellcode (ausschnittsweise)}
+
+\subsection{genuegend\_platz}
+Die Funktion \texttt{genuegend\_platz}, die prüft, ob in einem Punkt $(x,y)$ genügend Platz für ein Rechteck mit der Länge \texttt{laenge} und der Breite \texttt{breite} ist. Dies wird mit der Matrix \texttt{matrix} gemacht:
+\lstinputlisting[language=Python]{code/genuegend_platz.py}
+
+\subsection{eins\_platzieren.py}
+Die Funktion \texttt{eins\_platzieren}, die die ideale Position für ein Rechteck der Länge \texttt{laenge} und der Breite \texttt{breite} findet. Dazu wird die Matrix \texttt{matrix} gebraucht, um zu überprüfen, welche Felder bereits belegt sind.
+\lstinputlisting[language=Python]{code/eins_platzieren.py}
+
+\subsection{anordnen}
+Die Funktion \texttt{anordnen}, die versucht, eine Liste von Rechtecken \texttt{rechtecke} in einem Rechteck der Länge \texttt{laenge} und der Breite \texttt{breite} unterzubringen:
+\lstinputlisting[language=Python]{code/anordnen.py}
+   
+\subsection{Modulebene}
+Auf Modulebene wird versucht, die Rechtecke um ihren größten gemeinsamen Teiler herunterzuskalieren. Daraufhin wird \texttt{anordnen} so aufgerufen, dass ein optimales Ergebnis entsteht. Hier müssen auch die Rechtecke eingegeben werden:
+
+\lstinputlisting[language=Python]{code/modulebene.py}
 
 \printbibliography 
 

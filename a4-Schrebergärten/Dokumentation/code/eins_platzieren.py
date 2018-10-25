@@ -1,7 +1,7 @@
 def eins_platzieren(breite, laenge, matrix):
 
     platziert = False
-
+    
     # Einen Platz für das Rechteck finden
     for platziertes_x in range(len(matrix[0])):
         for platziertes_y in range(len(matrix)):
