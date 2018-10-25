@@ -63,19 +63,19 @@
 \section{Lösungsidee}
 Mein Verfahren, um zu ermitteln, ob es einen Superstar gibt und wie dieser heißt ist in zwei Phasen unterteilt:
 \begin{enumerate}
-\item In der \textbf{Ermittlungsphase} wird aus der gesamten Gruppe genau eine Person durch ein Ausschlussverfahren ermittelt, die ein Superstar sein könnte. 
+\item In der \textbf{Ermittlungsphase} wird aus der gesamten Gruppe genau eine Person ermittelt, die ein Superstar sein könnte. Dies geschieht durch ein Ausschlussverfahren.
 \item In der \textbf{Validierungsphase} wird überprüft, ob die in der Ermittlungsphase ermittelte Person tatsächlich ein Superstar ist.
 \end{enumerate}
 
-\paragraph{Ermittlungsphase}
-Zur Ermittlung, ob es einen Superstar gibt und wie dieser eventuell heißt, benutze ich ein Ausschlussverfahren. Am Anfang sind alle Mitglieder der Gruppe mögliche Superstars, da bisher keine Informationen vorliegen, die beweisen, dass Mitglieder keine Superstars sind. Um genau einen möglichen Superstar aus wenig Anfragen zu bestimmen, muss man aus jeder Anfrage so viele Informationen wie möglich gewinnen. Wenn $X$ und $Y$ zwei verschiedene Mitglieder einer Gruppe sind und beide mögliche Superstars sind, so schließt eine Anfrage der Form \textit{Folgt $X$ $Y$?} immer entweder $X$ oder $Y$ aus der Liste der möglichen Superstars aus, denn:
+\subsection{Ermittlungsphase}
+Zur Ermittlung, ob es einen Superstar gibt und wie dieser eventuell heißt, benutze ich ein Ausschlussverfahren. Am Anfang sind alle Mitglieder der Gruppe mögliche Superstars, da bisher keine Informationen vorliegen, die beweisen, dass Mitglieder keine Superstars sind. Um genau einen möglichen Superstar aus wenig Anfragen wie möglich zu bestimmen, muss man aus jeder Anfrage so viele Informationen wie möglich gewinnen. Wenn $X$ und $Y$ zwei verschiedene Mitglieder einer Gruppe sind und beide mögliche Superstars sind, so schließt eine Anfrage der Form \textit{Folgt $X$ $Y$?} immer entweder $X$ oder $Y$ aus der Liste der möglichen Superstars aus, denn:
 \begin{itemize}
-  \item Falls $X$ $Y$ folgt, so kann $X$ kein Superstar sein, denn ein Superstar folgt keinem anderen Mitglied der Gruppe
-  \item Falls $X$ nicht $Y$ folgt, so kann $Y$ kein Superstar sein, denn alle anderen Mitglieder der Gruppe folgen einem Superstar
+  \item Falls $X$ $Y$ folgt, so kann $X$ kein Superstar sein, denn ein Superstar folgt keinem anderen Mitglied der Gruppe.
+  \item Falls $X$ nicht $Y$ folgt, so kann $Y$ kein Superstar sein, denn alle anderen Mitglieder der Gruppe folgen einem Superstars.
 \end{itemize}
 Um nun die Anzahl der möglichen Superstars auf einen zu reduzieren, nimmt man die ersten zwei Mitglieder $X$ und $Y$ aus der Liste, stellt die Anfrage \textit{Folgt $X$ $Y$?} und fügt das nichtausgeschlossene Mitglied wieder der Liste hinzu.\newline Da mit diesem Verfahren mit einer Anfrage je ein Mitglied aus der Liste der möglichen Superstars eliminiert werden kann und am Anfang $n$ Mitglieder in der Liste sind und am Ende nur $1$ Mitglied in der Liste verbleibt, müssen $n-1$ Anfragen gestellt werden, um die Anzahl der möglichen Superstars von $n$ auf $1$ zu reduzieren.
 
-\paragraph{Validierungsphase}
+\subsection{Validierungsphase}
 Da jetzt nurnoch ein möglicher Superstar $S$ vorliegt, muss noch überprüft werden, ob dieser tatsächlich einer ist. Die einzige Möglichkeit, um dies zu überprüfen, ist für jedes andere Mitglied $X$ zwei Anfragen zu stellen:
 \begin{enumerate}
 \item Folgt $X$ $S$? Falls nein, ist $S$ kein Superstar.
@@ -84,29 +84,25 @@ Da jetzt nurnoch ein möglicher Superstar $S$ vorliegt, muss noch überprüft we
 Falls bei einer der Anfragen herauskommt, dass $S$ kein Superstar ist, ist die Validierungsphase beendet und es gibt keinen Superstar in der Gruppe, da $S$ der einzige mögliche Superstar vor der Validierungsphase war.\newline
 Falls bei keiner der Anfragen herauskommt, dass $S$ kein Superstar ist, haben wir festgestellt, dass $S$ niemandem folgt, jedoch jeder $S$ folgt, sodass $S$ der Superstar ist.\newline Falls $S$ der Superstar ist, werden in der Validierungsphase $n-1$ Anfragen der Form \textit{Folgt $S$ $X$?} und $n-1$ Anfragen der Form \textit{Folgt $X$ $S$?} gestellt, sodass maximal $2(n-1)$ Anfragen gestellt werden.
 
-\paragraph{Optimierung des Verfahrens}
-Da in der Validierungsphase alle Anfragen, die den möglichen Superstar $S$ enthalten, gestellt werden müssen, aber schon in der Ermittlungsphase einige dieser Anfragen gestellt werden müssen, um $S$ zu ermitteln, kommt es zwingend vor, dass Anfragen doppelt gestellt werden. Da jede doppelt gestellte Anfrage zu vermeiden ist, können bereits gestellte Anfragen und ihre Ergebnisse gespeichert werden und für jede Anfrage kann überprüft werden, ob ihr Ergebnis bereits im Zwischenspeicher existiert, sodass die Anzahl der Anfragen leicht gesenkt werden kann. Da in der Informatik jedoch oft der Worst-Case zählt, ist meine Schätzung der Anzahl der Anfragen $3(n-1) = 3n-3$.
+\subsection{Optimierung des Verfahrens}
+Da in der Validierungsphase alle Anfragen, die den möglichen Superstar $S$ enthalten, gestellt werden müssen, aber schon in der Ermittlungsphase einige dieser Anfragen gestellt werden müssen, um $S$ zu ermitteln, kommt es zwingend vor, dass Anfragen doppelt gestellt werden. Da jede doppelt gestellte Anfrage zu vermeiden ist, können bereits gestellte Anfragen und ihre Ergebnisse gespeichert werden. Für jede Anfrage kann dann überprüft werden, ob ihr Ergebnis bereits im Zwischenspeicher existiert, sodass die Anzahl der Anfragen leicht gesenkt werden kann. Da hier jedoch der Worst-Case zählt, ist meine Schätzung der Anzahl der Anfragen trotzdem $3(n-1) = 3n-3$.
 
 \clearpage
 
-
 \section{Umsetzung}
-Das Verfahren zur Bestimmung eines Superstars wurde in Python umgesetzt.
+Das Verfahren zur Bestimmung eines Superstars wurde in Python 3 umgesetzt.
 
 Dazu wird als erstes in der Funktion \texttt{eingabe\_lesen} die Eingabe in die Liste der Mitglieder und die Liste der Verbindungen ($X$ folgt $Y$) eingelesen. Dabei ist eine Verbindung eine Liste der beiden Namen der Form \texttt{[X, Y]}. 
 
-Die Funktion \texttt{folgt} um das Stellen der Anfrage, das Speichern, falls die gleiche Anfrage noch einmal gestellt werden sollte und um das Ausgeben von Anfragen und des Ergebnisses. Der Zwischenspeicher ist ein \texttt{dict} das als Schlüssel Tupel der Form \texttt{(X,Y)} verwendet, da Python keine Listen als Schlüssel unterstützt, und als Wert, ob $X$ $Y$ folgt, zurückgibt. 
+Die Funktion \texttt{folgt} kümmert sich um das Stellen der Anfrage, das Speichern, falls die gleiche Anfrage noch einmal gestellt werden sollte und um das Ausgeben von Anfragen und des Ergebnisses. Der Zwischenspeicher ist ein \texttt{dict} das als Schlüssel Tupel der Form \texttt{(X,Y)} verwendet, da Python keine Listen als Schlüssel unterstützt, und als Wert, ob $X$ $Y$ folgt, zurückgibt. 
 
 Die Funktion \texttt{superstar\_bestimmen} ist die Funktion, die aus den gelesenen Mitgliedern den Superstar bestimmen. Dazu werden die Bestimmungs- und Validierungsphase wie oben beschrieben ausgeführt. Um zu bestimmen, ob ein Mitglied einem anderen folgt, wird \texttt{folgt} ausgeführt, damit die Anfrage richtig verarbeitet wird.
 
-Das erste Argument des Skripts sollte die Eingabedatei sein, sonst wird eine Fehlermeldung ausgegeben. Das Skript verlässt sich auf die Gültigkeit der Eingabedatei; falls diese nicht richtig formattiert ist, kann es zu unerwarteten Fahlern führen.
-
-\clearpage
+Das erste Argument des Skripts sollte die Eingabedatei sein, sonst wird eine Fehlermeldung ausgegeben. Das Skript verlässt sich auf die Gültigkeit der Eingabedatei; falls diese nicht richtig formattiert ist, kann es zu unerwarteten Fehlern führen.
 
 \section{Beispiele}
-Die erste Zeile ist nicht Teil des Programms, sondern dient zur Illustration, wie das Skript aufgerufen werden sollte. Die letzte leere Zeile und das \$ soll zeigen, dass die Ausgabe hier endet.\newline 
 
-Beispiel 1 von der bwinf-Webseite:
+\subsection{Beispiel 1 von der bwinf-Webseite}
 \begin{lstlisting}
 $ python superstar.py ../beispieldaten/superstar1.txt
 Folgt Hailey Justin? 	Ja!
@@ -116,11 +112,9 @@ Folgt Justin Hailey? 	Nein!
 Superstar: Justin
 3 Mitglieder
 4 gestellte Anfragen
-
-$
 \end{lstlisting}
 
-Beispiel 2 von der bwinf-Webseite:
+\subsection{Beispiel 2 von der bwinf-Webseite}
 \begin{lstlisting}
 $ python superstar.py ../beispieldaten/superstar2.txt
 Folgt Codd Knuth? 	Ja!
@@ -135,11 +129,9 @@ Folgt Dijkstra Codd? 	Nein!
 Superstar: Dijkstra
 5 Mitglieder
 9 gestellte Anfragen
-
-$
 \end{lstlisting}
 
-Beispiel 3 von der bwinf-Webseite:
+\subsection{Beispiel 3 von der bwinf-Webseite}
 \begin{lstlisting}
 $ python superstar.py ../beispieldaten/superstar3.txt
 Folgt Sjoukje Rinus? 	Nein!
@@ -154,11 +146,10 @@ Folgt Edsger Jitse? 	Ja!
 Kein Superstar
 8 Mitglieder
 9 gestellte Anfragen
-
-$
 \end{lstlisting}
 
-Beispiel 4 von der bwinf-Webseite (Die Liste der Anfragen wurde hier aus Platzgründen auf die erste und lezte Zeile reduziert):
+\subsection{Beispiel 4 von der bwinf-Webseite}
+Hinweis: Die Liste der Anfragen wurde hier aus Platzgründen auf die erste und lezte Zeile reduziert
 \begin{lstlisting}
 $ python superstar.py ../beispieldaten/superstar4.txt
 Folgt Rut Penny? 	Nein!
@@ -167,11 +158,7 @@ Folgt Folke Rut? 	Nein!
 Superstar: Folke
 80 Mitglieder
 211 gestellte Anfragen
-
-$
 \end{lstlisting}
-
-\clearpage
 
 \section{Quellcode (ausschnittsweise)}
 
