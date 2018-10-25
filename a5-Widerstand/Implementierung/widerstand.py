@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import sys
 from itertools import combinations
 from uuid import uuid4

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/python3
 import math
 
 def r_x(r):
