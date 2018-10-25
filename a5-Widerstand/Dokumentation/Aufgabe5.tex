@@ -83,6 +83,7 @@
 \end{itemize}
 
 \subsection{Formeln}
+\label{formeln}
 Zur Bestimmung von $R_2$, falls $R_1$ bekannt und $R_{ges}$ aus $R_1$ und $R_2$ zusammengebaut ist:
 \vspace{10pt}
 
@@ -97,18 +98,18 @@ Wenn das Problem für alle $n \in \mathbb{N}$ gelöst werden soll, so müssten a
 kann ein rekursives Verfahren mit Fallunterscheidung beschrieben werden:
 
 \begin{enumerate}
-  \item Ein Elementarwiderstand: 
+  \item \textbf{Ein Elementarwiderstand} $(n=1)$
   
   Die Lösung ist trivial: Der Elementarwiderstand mit der Ohmzahl, die am nächsten an der geforderten Ohmzahl liegt, wird gewählt.
-  \item Zwei Elementarwiderstände: 
+  \item \textbf{Zwei Elementarwiderstände} $(n=2)$
   
-  Zwei Elementarwiderstände können parallel oder in Reihe geschalten werden. Für alle möglichen Widerstände kann ein anderer optimaler Elementarwiderstand $R_2$, der nach den Formeln oben berechnet wurde, mit dem obigen Verfahren gesucht werden. Beide Möglichkeiten werden einer Menge hinzugefügt. Am Ende wird die Möglichkeit, die am nächsten an der geforderten Ohmzahl $R_{ges}$ liegt, gewählt.
+  Zwei Elementarwiderstände können parallel oder in Reihe geschalten werden. Für alle möglichen Widerstände kann ein anderer optimaler Elementarwiderstand $R_2$, der nach den Formeln aus \ref{formeln} berechnet wurde, mit dem obigen Verfahren gesucht werden. Beide Möglichkeiten werden einer Menge hinzugefügt. Am Ende wird die Möglichkeit, die am nächsten an der geforderten Ohmzahl $R_{ges}$ liegt, gewählt.
 
-  \item Drei Elementarwiderstände: 
+  \item \textbf{Drei Elementarwiderstände} $(n=3)$
   
-  Ähnlich wie bei zwei Elementarwiderständen, gibt für jeden Widerstand $R_1$ aus der Grabbelkiste zwei Möglichkeiten: Er kann in Reihe oder parallel zu einem zusammengesetzten Widerstand $R_2$ geschalten werden; dabei werden die Formeln oben zur Bestimmung des Widerstandswertes benutzt. Es gibt keine Anordnung von drei Elementarwiderständen, für die $R_1$ und $R_2$ keine Elementarwiderstände sind, da jeder zusammengesetzter Widerstand aus mindestens zwei Elementarwiderständen bestehen muss, es aber nur drei gibt. Somit lässt sich jede dieser Anordnungen auf eine, bei der $R_1$ ein Elementarwiderstand ist, reduzieren.
+  Ähnlich wie bei zwei Elementarwiderständen, gibt für jeden Widerstand $R_1$ aus der Grabbelkiste zwei Möglichkeiten: Er kann in Reihe oder parallel zu einem zusammengesetzten Widerstand $R_2$ geschalten werden; dabei werden die Formeln aus \ref{formeln} zur Bestimmung des Widerstandswertes benutzt. Es gibt keine Anordnung von drei Elementarwiderständen, für die $R_1$ und $R_2$ keine Elementarwiderstände sind, da jeder zusammengesetzter Widerstand aus mindestens zwei Elementarwiderständen bestehen muss, es aber nur drei gibt. Somit lässt sich jede dieser Anordnungen auf eine, bei der $R_1$ ein Elementarwiderstand ist, reduzieren.
 
-  \item Vier Elementarwiderstände: 
+  \item \textbf{Vier Elementarwiderstände} $(n=4)$
   
   Hier muss zwischen zwei Fällen unterschieden werden:
   \begin{enumerate}
@@ -118,14 +119,14 @@ kann ein rekursives Verfahren mit Fallunterscheidung beschrieben werden:
       \item Zwei Widerstandspaare, die ihre Elementarwiderstände parallel schalten, jedoch untereinander in Reihe geschalten sind
       \item Zwei Widerstandspaare, die ihre Elementarwiderstände in Reihe schalten, jedoch untereinander parallel geschalten sind
     \end{enumerate}
-    Um diese Anordnungen zu berücksichtigen, werden alle Kombinationen von zwei Widerständen in der Kiste bestimmt. Der Liste der möglichen Anordnungen werden somit zwei hinzugefügt: Eine, bei der die zwei Widerstände ($R_1$) parallel geschalten sind und bei der $R_1$ mit $R_2$ in Reihe geschalten ist und eine, bei der die zwei Widerstände ($R_1$) in Reihe geschalten sind und bei der $R_1$ mit $R_2$ parallel geschalten sind. Um $R_2$ zu ermitteln, kann das Verfahren für zwei Widerstände oben benutzt werden.
+    Um diese Anordnungen zu berücksichtigen, werden alle Kombinationen von zwei Widerständen in der Kiste bestimmt. Der Liste der möglichen Anordnungen werden somit zwei hinzugefügt: Eine, bei der die zwei Widerstände ($R_1$) parallel geschalten sind und bei der $R_1$ mit $R_2$ in Reihe geschalten ist und eine, bei der die zwei Widerstände ($R_1$) in Reihe geschalten sind und bei der $R_1$ mit $R_2$ parallel geschalten sind. Um $R_2$ zu ermitteln, kann das oben beschriebene Verfahren für zwei Widerstände benutzt werden.
   \end{enumerate}
   Beide Verfahren zusammen stellen sicher, dass alle Anordnungen überprüft werden.
 \end{enumerate}
 
 
 \section{Umsetzung}
-Das verfahren zur Bestimmung eines optimalen zusammengesetzten Widerstands wurde in Python umgesetzt. Das Zeichnen eines Bauplans wird mit dem Python-Paket \textit{graphviz} umgesetzt. Neben dem Paket muss auch das gleichnamige Programm installiert werden, um eine Bildausgabe zu ermöglichen. Die verschiedenen Zeichnungen werden als \texttt{.png}-Dateien gespeichert.
+Das verfahren zur Bestimmung eines optimalen zusammengesetzten Widerstands wurde in Python umgesetzt. Das Zeichnen eines Bauplans wird mit dem Python-Paket \texttt{graphviz} umgesetzt. Neben dem Paket muss auch das gleichnamige Programm installiert werden, um eine Bildausgabe zu ermöglichen. Die verschiedenen Zeichnungen werden als \texttt{.png}-Dateien gespeichert.
 
 Das Skript wird mit zwei Argumenten aufgerufen:
 \begin{itemize}
@@ -148,9 +149,9 @@ Die Hauptfunktion, um einen zusammengesetzten Widerstand zu bauen, heißt \textt
 \end{itemize}
 Am Ende von \texttt{widerstand\_zusammenbauen} wird die Möglichkeit mit der geringsten Differenz zum geforderten Widerstandswert gewählt.
 
-Die Funktion \texttt{widerstandswert\_berechnen} berechnet den Widerstandswert eines zusammengesetzten Widerstands.
+Die Funktion \texttt{widerstandswert\_berechnen} berechnet den Widerstandswert eines zusammengesetzten Widerstands rekursiv.
 
-Die Funktion \texttt{widerstand\_zeichnen} zeichnet einen zusammengesetzten Widerstand auf einem Graphen mithilfe der Bibliothek \texttt{graphviz}. \texttt{graphviz} muss jeden Knoten eines Graphs identifizieren können. Dazu benutze ich das integrierte Python-Modul \texttt{uuid} um IDs für die Knoten des Graphs zu generieren. Die Funktion \texttt{widerstand\_zeichnen} zeichnet immer zwischen zwei Knoten (\texttt{knoten\_davor} und \texttt{knoten\_danach}):
+Die Funktion \texttt{widerstand\_zeichnen} zeichnet einen zusammengesetzten Widerstand auf einem Graphen mithilfe der Bibliothek \texttt{graphviz}. \texttt{graphviz} muss jeden Knoten eines Graphs identifizieren können. Dazu benutze ich das integrierte Python-Modul \texttt{uuid}, um IDs für die Knoten des Graphs zu generieren. Die Funktion \texttt{widerstand\_zeichnen} zeichnet immer zwischen zwei Knoten (\texttt{knoten\_davor} und \texttt{knoten\_danach}):
 \begin{itemize}
   \item Bei einem Elementarwiderstand (\texttt{einer}) wird einfach ein neuer Knoten mit dem Widerstandswert erstellt und zwei Kanten zu \texttt{knoten\_davor} und \texttt{knoten\_danach} erstellt.
   \item Bei einem zusammengesetzten Widerstand, der zwei Widerstände parallel schaltet, wird \texttt{widerstand\_zeichnen} für beide aufgerufen. Hierbei bleiben \texttt{knoten\_davor} und \texttt{knoten\_danach} gleich.
@@ -170,11 +171,10 @@ Um einen Widerstand tatsächlich zu zeichnen, muss erst ein Graph erstellt werde
 }
 
 
-Bemerkung: Die erste und letzte Zeile der Beispiele sind nur zur Anschaulichkeit übernommen worden. Sie sind nicht Teil der Programmausgabe.
 \subsection{500 $\Omega$}
 500 $\Omega$ mit der bwinf-Widerstandsliste:
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true]
 $ python Implementierung/widerstand.py beispieldaten/widerstaende.txt 500
 
 1 Widerstand: 470 Ohm
@@ -192,10 +192,7 @@ Zeichnung nach "3 Widerstände - 500.00 Ohm.gv.png" ausgegeben
 4 Widerstände: 500.0 Ohm
 ('parallel', ('reihe', ('einer', 1800), ('einer', 1200)), ('reihe', ('einer', 270), ('einer', 330)))
 Zeichnung nach "4 Widerstände - 500.00 Ohm.gv.png" ausgegeben
-
-$
 \end{lstlisting}
-
 \widerstand{1}{500}{1}{470}
 \widerstand{1}{500}{2}{500.38}
 \widerstand{1}{500}{3}{500}
@@ -205,7 +202,7 @@ $
 \subsection{1400 $\Omega$}
 1400 $\Omega$ mit der bwinf-Widerstandsliste:
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true]
 $ python Implementierung/widerstand.py beispieldaten/widerstaende.txt 1400
 
 1 Widerstand: 1500 Ohm
@@ -224,9 +221,6 @@ Zeichnung nach "3 Widerstände - 1400.00 Ohm.gv.png" ausgegeben
 ('reihe', ('parallel', ('einer', 1800), ('einer', 2700)),
   ('reihe', ('einer', 220), ('einer', 100)))
 Zeichnung nach "4 Widerstände - 1400.00 Ohm.gv.png" ausgegeben
-
-$
-
 \end{lstlisting}
 
 \widerstand{2}{1400}{1}{1500}
@@ -239,12 +233,12 @@ $
 
 \section{Quellcode (ausschnittsweise)}
 \subsection{widerstand\_zusammenbauen}
-\lstinputlisting[language=Python]{code/widerstand_zusammenbauen.py}
+\lstinputlisting[language=Python,breaklines=true]{code/widerstand_zusammenbauen.py}
 
 \subsection{widerstand\_zeichnen}
-\lstinputlisting[language=Python]{code/widerstand_zeichnen.py} 
+\lstinputlisting[language=Python,breaklines=true]{code/widerstand_zeichnen.py} 
 
 \subsection{widerstandswert\_berechnen}
-\lstinputlisting[language=Python]{code/widerstandswert_berechnen.py} 
+\lstinputlisting[language=Python,breaklines=true]{code/widerstandswert_berechnen.py} 
 
 \end{document}
